@@ -81,7 +81,7 @@ function set_cell_colors(){
   };
 
   var path_data = $('#bench_summary_table').data("input");
-  path_data = "http://127.0.0.1:5000/" + path_data;
+  path_data = "https://dev-openebench.bsc.es/bench_event/api/" + path_data;
 
   fetchUrl(path_data).then(results => {
 
