@@ -1,0 +1,14 @@
+.summaryTable td {
+    border: 2px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    height: 5vh ;
+}
+
+.summaryTable {
+    width: 80vw; 
+    border-collapse: collapse; 
+    background-color: #f0f0f0;
+    border: 5px solid black; 
+    /* float: right; */
+}
