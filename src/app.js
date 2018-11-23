@@ -34,8 +34,8 @@ function fill_in_table (divid, data){
             cell.innerHTML = column_values[i];
             if (i == 0) {
                 var url = "https://dev-openebench.bsc.es/html/scientific/TCGA/TCGA:2018-04-05/TCGA:2018-04-05";
-
-                url = url + "_" + key;
+                var url = document.URL;
+                url = url + "/" + url.split("/").pop() + "_" + key;
 
                 cell.id = column_values[i];
                 cell.innerHTML = "<a href='" + url + "' >"+column_values[i]+"</a>";
@@ -80,13 +80,71 @@ function set_cell_colors(){
   
   };
 
-  var path_data = $('#bench_summary_table').data("input");
-  path_data = "https://dev-openebench.bsc.es/bench_event/api/" + path_data;
 
-  fetchUrl(path_data).then(results => {
+function compute_classification(selected_classifier){
 
-    fill_in_table("bench_summary_table", results);
-    set_cell_colors();
-  })
+    // every time a new classification is compute the previous results table is deleted (if it exists)
+    if (document.getElementById("bench_summary_table") != null) {
+        document.getElementById("bench_summary_table").innerHTML = '';
+    };
+
+    var path_data = document.URL.split("/").pop() + "/" + selected_classifier;
+    path_data = "https://dev-openebench.bsc.es/bench_event/api/" + path_data;
+    console.log(path_data);
+    fetchUrl(path_data).then(results => {
   
+      fill_in_table("bench_summary_table", results);
+      set_cell_colors();
+    });
+};
+
+
+function load_table(){
+
+ 
+    var list = document.getElementById("bench_dropdown_list");
+
+    list.addEventListener('change', function(d) {
+        compute_classification(this.options[this.selectedIndex].id.split("__")[1]);
+      });
+    
+    var group = document.createElement("OptGroup");
+    group.label = "Select a classification method:";
+    list.add(group);
+    //
+
+    var option1 = document.createElement("option");
+    option1.class ="selection_option";
+    option1.id = "classificator__squares";
+    option1.title = "Apply square quartiles classification method (based on the 0.5 quartile of the X and Y metrics)";
+    option1.data = ("toggle", "list_tooltip");
+    option1.data = ("container", "#tooltip_container");
+    option1.innerHTML= "SQUARE QUARTILES";
+
+    var option2 = document.createElement("option");
+    option2.class ="selection_option";
+    option2.id = "classificator__diagonals";
+    option2.title = "Apply diagonal quartiles classifcation method (based on the assignment of a score to each participant proceeding from its distance to the 'optimal performance' corner)";
+    option2.data = ("toggle", "list_tooltip");
+    option2.data = ("container", "#tooltip_container");
+    option2.selected="disabled";
+    option2.innerHTML= "DIAGONAL QUARTILES";
+
+    var option3 = document.createElement("option");
+    option3.class ="selection_option";
+    option3.id = "classificator__clusters";
+    option3.title = "Apply k-means clustering algorithm to group the participants";
+    option3.data = ("toggle", "list_tooltip");
+    option3.data = ("container", "#tooltip_container");
+    option3.innerHTML= "K-MEANS CLUSTERING";
+    
+    group.appendChild(option1);
+    group.appendChild(option2);
+    group.appendChild(option3);
+    
+    var selected_classifier = list.options[list.selectedIndex].id.split("__")[1];
+    compute_classification(selected_classifier);
+};
   
+export { load_table };
+// load_table();
