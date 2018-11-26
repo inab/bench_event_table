@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <meta charset="utf-8"/>
 <html>
-        <select id="bench_dropdown_list" class="classificators_list">
-        </select>
+
     <head>
-            <table id="bench_summary_table" class="summaryTable" data-input="TCGA:2018-04-05"></table>
+        <span id="bench_table_span">
+
+                <div class="example-container mat-elevation-z8" *ngIf='bm'>
+                        <table id="bench_summary_table" class="summaryTable" data-input="TCGA:2018-04-05"></table>
+                </div>
+
+        </span>
             <script type="text/javascript" src="http://localhost/~jgarrayo/flask_table/frontend/build/build.js"></script>
     </head>
 </html>

@@ -90,7 +90,7 @@ function compute_classification(selected_classifier){
 
     var path_data = $('#bench_summary_table').data("input") + "/" + selected_classifier;
     path_data = "https://dev-openebench.bsc.es/bench_event/api/" + path_data;
-
+    console.log(path_data)
     fetchUrl(path_data).then(results => {
   
       fill_in_table("bench_summary_table", results);
@@ -101,17 +101,23 @@ function compute_classification(selected_classifier){
 
 function load_table(){
 
- 
-    var list = document.getElementById("bench_dropdown_list");
+    //add dropdown list
+    var list = document.createElement("select");
+    list.id = "bench_dropdown_list";
+    list.className = "classificators_list";
+    var bench_table = document.getElementById("bench_summary_table");
+    bench_table.parentNode.insertBefore(list, bench_table);
 
     list.addEventListener('change', function(d) {
         compute_classification(this.options[this.selectedIndex].id.split("__")[1]);
       });
     
+      // add option group
     var group = document.createElement("OptGroup");
     group.label = "Select a classification method:";
     list.add(group);
-    //
+
+    // add list options
 
     var option1 = document.createElement("option");
     option1.class ="selection_option";

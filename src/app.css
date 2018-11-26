@@ -10,6 +10,23 @@
     width: 100%;
     border-collapse: collapse; 
     background-color: #f0f0f0;
-    border: 3px solid black; 
+    border: 5px solid #0A58A2; 
     /* float: right; */
+}
+
+.classificators_list{
+    background-color: #0A58A2; 
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1vw;
+    padding-left: 25px;
+    padding-right: 25px;
+    text-align: center;
+    width: 20vw;
+
+    }
+
+.classificators_list:hover {
+    background-color: #b3cde0;
+
 }
