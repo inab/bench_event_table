@@ -1,5 +1,6 @@
 import $ from "jquery";
 import './app.css';
+import urljoin from 'url-join';
 
 function fill_in_table (divid, data){
   //create table dinamically
@@ -33,10 +34,11 @@ function fill_in_table (divid, data){
             var cell = table.rows[i].insertCell(table.rows[i].cells.length);
             cell.innerHTML = column_values[i];
             if (i == 0) {
-                var url = "https://dev-openebench.bsc.es/html/scientific/TCGA/TCGA:2018-04-05/TCGA:2018-04-05";
                 var url = document.URL;
-                url = url + "/" + url.split("/").pop() + "_" + key;
 
+                var bench_id = $('#bench_summary_table').data("input");
+
+                url = urljoin(url, bench_id + "_" + key);
                 cell.id = column_values[i];
                 cell.innerHTML = "<a href='" + url + "' >"+column_values[i]+"</a>";
             }
