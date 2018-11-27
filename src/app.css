@@ -13,7 +13,10 @@
     border: 5px solid #0A58A2; 
     /* float: right; */
 }
-
+#no_benchmark_data{
+    text-align: center;
+    border: none !important;
+}
 .classificators_list{
     background-color: #0A58A2; 
     border-radius: 8px;

@@ -77,7 +77,7 @@ function set_cell_colors(){
         return JSON.parse(result);
       }
       catch (err) {
-        console.log(`Invalid Url Error: ${err.stack} `);
+        console.log(`Invalid Url Error: ${err.stack} `, url);
       }
   
   };
@@ -92,11 +92,24 @@ function compute_classification(selected_classifier){
 
     var path_data = $('#bench_summary_table').data("input") + "/" + selected_classifier;
     path_data = urljoin("https://dev-openebench.bsc.es/bench_event/api/", path_data);
-    console.log(path_data)
+
     fetchUrl(path_data).then(results => {
-  
-      fill_in_table("bench_summary_table", results);
-      set_cell_colors();
+      
+        if (results == undefined){
+
+            document. getElementById("bench_dropdown_list").remove();
+
+            var para = document.createElement("td");
+            para.id = "no_benchmark_data"
+            var err_txt = document.createTextNode("No data available for the selected benchmark");
+            para.appendChild(err_txt);
+            var element = document.getElementById("bench_summary_table");
+            element.appendChild(para);
+
+        } else {
+            fill_in_table("bench_summary_table", results);
+            set_cell_colors();
+        }
     });
 };
 
