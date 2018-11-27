@@ -91,7 +91,7 @@ function compute_classification(selected_classifier){
     };
 
     var path_data = $('#bench_summary_table').data("input") + "/" + selected_classifier;
-    path_data = "https://dev-openebench.bsc.es/bench_event/api/" + path_data;
+    path_data = urljoin("https://dev-openebench.bsc.es/bench_event/api/", path_data);
     console.log(path_data)
     fetchUrl(path_data).then(results => {
   
