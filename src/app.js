@@ -94,8 +94,8 @@ function compute_classification(selected_classifier){
     path_data = urljoin("https://dev-openebench.bsc.es/bench_event/api/", path_data);
 
     fetchUrl(path_data).then(results => {
-      
-        if (results == undefined){
+
+        if (results.data !== undefined && results.data == null){
 
             document. getElementById("bench_dropdown_list").remove();
 
