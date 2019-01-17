@@ -33,6 +33,7 @@ function fill_in_table (divid, data){
         for ( var i = 0; i < table.rows.length; i++) {
             var cell = table.rows[i].insertCell(table.rows[i].cells.length);
             cell.innerHTML = column_values[i];
+            cell.className = "sibling-highlight";
             if (i == 0) {
                 var url = document.URL;
 
@@ -68,10 +69,26 @@ function set_cell_colors(){
 
   };
 
-  async function fetchUrl(url) {
+  async function fetchUrl(url, http_method, challenge_list) {
 
+    conosole.log(JSON.stringify(challenge_list));
     try {
-      let request1 = await fetch(url);
+        
+        let request1;
+        if (http_method == "GET"){
+            request1 = await fetch(url);
+        } else {
+            request1 = await fetch(url, { method: "POST", mode: "no-cors", // no-cors, cors, *same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
+            headers: {
+                "Content-Type": "application/json",
+                // "Content-Type": "application/x-www-form-urlencoded",
+            }, 
+            body: JSON.stringify(challenge_list) });
+            console.log(request1)
+        }
+      
       let result = await request1.text();
 
         return JSON.parse(result);
@@ -83,7 +100,7 @@ function set_cell_colors(){
   };
 
 
-function compute_classification(selected_classifier){
+function compute_classification(selected_classifier, challenge_list){
 
     // every time a new classification is compute the previous results table is deleted (if it exists)
     if (document.getElementById("bench_summary_table") != null) {
@@ -91,30 +108,54 @@ function compute_classification(selected_classifier){
     };
 
     var path_data = $('#bench_summary_table').data("input") + "/" + selected_classifier;
-    path_data = urljoin("https://dev-openebench.bsc.es/bench_event/api/", path_data);
+    path_data = urljoin("http://0.0.0.0:8080/", path_data);
+    console.log(path_data)
+    
+    if (challenge_list == []){
+        fetchUrl(path_data, "GET", challenge_list).then(results => {
+            console.log("get")
 
-    fetchUrl(path_data).then(results => {
+            if (results.data !== undefined && results.data == null){
 
-        if (results.data !== undefined && results.data == null){
+                document. getElementById("bench_dropdown_list").remove();
 
-            document. getElementById("bench_dropdown_list").remove();
+                var para = document.createElement("td");
+                para.id = "no_benchmark_data"
+                var err_txt = document.createTextNode("No data available for the selected benchmark");
+                para.appendChild(err_txt);
+                var element = document.getElementById("bench_summary_table");
+                element.appendChild(para);
 
-            var para = document.createElement("td");
-            para.id = "no_benchmark_data"
-            var err_txt = document.createTextNode("No data available for the selected benchmark");
-            para.appendChild(err_txt);
-            var element = document.getElementById("bench_summary_table");
-            element.appendChild(para);
+            } else {
+                fill_in_table("bench_summary_table", results);
+                set_cell_colors();
+            }
+        });
+    } else {
+        console.log(challenge_list)
+        fetchUrl(path_data, "POST", challenge_list).then(results => {
 
-        } else {
-            fill_in_table("bench_summary_table", results);
-            set_cell_colors();
-        }
-    });
+            if (results.data !== undefined && results.data == null){
+
+                document. getElementById("bench_dropdown_list").remove();
+
+                var para = document.createElement("td");
+                para.id = "no_benchmark_data"
+                var err_txt = document.createTextNode("No data available for the selected benchmark");
+                para.appendChild(err_txt);
+                var element = document.getElementById("bench_summary_table");
+                element.appendChild(para);
+
+            } else {
+                fill_in_table("bench_summary_table", results);
+                set_cell_colors();
+            }
+        }); 
+    };
 };
 
 
-function load_table(){
+function load_table(challenge_list){
 
     //add dropdown list
     var list = document.createElement("select");
@@ -124,7 +165,7 @@ function load_table(){
     bench_table.parentNode.insertBefore(list, bench_table);
 
     list.addEventListener('change', function(d) {
-        compute_classification(this.options[this.selectedIndex].id.split("__")[1]);
+        compute_classification(this.options[this.selectedIndex].id.split("__")[1], challenge_list);
       });
     
       // add option group
@@ -164,8 +205,10 @@ function load_table(){
     group.appendChild(option3);
     
     var selected_classifier = list.options[list.selectedIndex].id.split("__")[1];
-    compute_classification(selected_classifier);
+    compute_classification(selected_classifier, challenge_list);
 };
   
 export { load_table };
-// load_table();
+
+var challenge_list = ["ACC","BRCA","DLBC"];
+load_table(challenge_list);
