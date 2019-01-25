@@ -99,7 +99,7 @@ function compute_classification(selected_classifier, challenge_list) {
     };
 
     var path_data = $('#bench_summary_table').data("input") + "/" + selected_classifier;
-    path_data = urljoin("http://0.0.0.0:8080/", path_data);
+    path_data = urljoin("https://dev-openebench.bsc.es/bench_event/api/", path_data);
     let http_method;
 
     if (challenge_list.length === undefined || challenge_list.length == 0) {
