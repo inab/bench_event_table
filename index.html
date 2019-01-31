@@ -6,11 +6,11 @@
         <span id="bench_table_span">
 
                 <div class="example-container mat-elevation-z8" *ngIf='bm'>
-                        <table id="bench_summary_table" class="summaryTable" data-input="TCGA:2018-04-05"></table>
+                        <table id="bench_summary_table" class="summaryTable" data-input="TCGA:2018-04-05" data-default-classifier="clusters" ></table>
                 </div>
 
         </span>
-            <script type="text/javascript" src="http://localhost/~jgarrayo/flask_table/frontend//build/build.js"></script>
+            <script type="text/javascript" src="./build/build.js"></script>
             <script>
                     var l = ["ACC","BRCA", "BLCA", "CHOL"];
                     load_table(l)
