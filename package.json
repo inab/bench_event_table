@@ -15,5 +15,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Javier Garrayo <javi@hotmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "license-checker": "^25.0.1"
+  }
 }

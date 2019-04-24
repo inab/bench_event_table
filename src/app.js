@@ -6,10 +6,8 @@ import { type } from "os";
 function fill_in_table(divid, data) {
     //create table dinamically
     var table = document.getElementById(divid);
-
     var row = table.insertRow(-1);
     row.insertCell(0).innerHTML = "<b>&#8595; TOOL / CHALLENGE &#8594; </b>";
-
     // append rows with all participants in the benchmark
     Object.keys(data[Object.keys(data)[0]])
         .sort()
@@ -34,15 +32,17 @@ function fill_in_table(divid, data) {
             for (var i = 0; i < table.rows.length; i++) {
                 var cell = table.rows[i].insertCell(table.rows[i].cells.length);
                 cell.innerHTML = column_values[i];
-                cell.className = "sibling-highlight";
+                // cell.className = "sibling-highlight";
                 if (i == 0) {
-                    var url = document.URL;
+                    var url = "https://dev-openebench.bsc.es/html/scientific/";
 
                     var bench_id = $('#bench_summary_table').data("input");
 
-                    url = urljoin(url, bench_id + "_" + key);
+                    // url = urljoin(url, bench_id + "_" + key);
                     cell.id = column_values[i];
-                    cell.innerHTML = "<a href='" + url + "' >" + column_values[i] + "</a>";
+                    cell.className = "rotate";
+                    // cell.innerHTML = "<a href='" + url + "' >" + column_values[i] + "</a>";
+                    cell.innerHTML = "<div ><a href='" + url + "'>" + column_values[i].split("_")[1] + "</a></div>";
                 }
             };
 

@@ -2,17 +2,39 @@
     border: 2px solid black;
     border-collapse: collapse;
     text-align: center;
-    height: 5vh ;
+    /* width: auto !important; */
+    /* height: 5vh ; */
 }
 
 .summaryTable {
     position: relative;
-    width: 100%;
+    width: 80vw;
     border-collapse: collapse; 
     background-color: #f0f0f0;
     border: 5px solid #0A58A2; 
     /* float: right; */
 }
+
+
+.rotate {
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  
+  height: 5.5em;
+}
+.rotate div {
+    min-width: 100%;
+    /* word-break: break-all; */
+     -moz-transform: rotate(-45.0deg);  /* FF3.5+ */
+       -o-transform: rotate(-45.0deg);  /* Opera 10.5 */
+  -webkit-transform: rotate(-45.0deg);  /* Saf3.1+, Chrome */
+             filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083);  /* IE6,IE7 */
+         -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)"; /* IE8 */
+         margin-left: -10em;
+         margin-right: -10em;
+}
+
 #no_benchmark_data{
     text-align: center;
     border: none !important;
