@@ -1,5 +1,5 @@
 .summaryTable td {
-    border: 2px solid black;
+    border: 1px solid black;
     border-collapse: collapse;
     text-align: center;
     /* width: auto !important; */
@@ -10,8 +10,8 @@
     position: relative;
     width: 80vw;
     border-collapse: collapse; 
-    background-color: #f0f0f0;
-    border: 5px solid #0A58A2; 
+    background-color: #ffffff;
+    border: 2px solid #0a589f; 
     /* float: right; */
 }
 
@@ -41,6 +41,7 @@
 }
 .classificators_list{
     background-color: #0A58A2; 
+    
     border-radius: 8px;
     color: #fff;
     font-size: 1vw;

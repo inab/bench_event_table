@@ -61,7 +61,7 @@ function set_cell_colors() {
         var cell_value = $(this).html(); //get the value
 
         if (cell_value == "1") { //if then for if value is 1
-            $(this).css({ 'background': '#238b45' });
+            $(this).css({ 'background': '#238b45', 'color': '#ffffff' });
         } else {
             $(this).css({ 'background': '#ffffff' });
         };
@@ -131,15 +131,14 @@ function compute_classification(selected_classifier, challenge_list) {
             }
         }
         )
-        .catch (err=> console.log(err))
+        .catch(err => console.log(err))
 };
 
 
-function load_table(challenge_list=[]) {
+function load_table(challenge_list = [], classifier = "diagonal") {
 
-    var element =  document.getElementById('bench_dropdown_list');
-    if (typeof(element) != 'undefined' && element != null)
-    {
+    var element = document.getElementById('bench_dropdown_list');
+    if (typeof (element) != 'undefined' && element != null) {
         document.getElementById("bench_dropdown_list").remove();
     }
 
@@ -167,6 +166,7 @@ function load_table(challenge_list=[]) {
     option1.title = "Apply square quartiles classification method (based on the 0.5 quartile of the X and Y metrics)";
     option1.data = ("toggle", "list_tooltip");
     option1.data = ("container", "#tooltip_container");
+    option1.value = "squares";
     option1.innerHTML = "SQUARE QUARTILES";
 
     var option2 = document.createElement("option");
@@ -175,7 +175,7 @@ function load_table(challenge_list=[]) {
     option2.title = "Apply diagonal quartiles classifcation method (based on the assignment of a score to each participant proceeding from its distance to the 'optimal performance' corner)";
     option2.data = ("toggle", "list_tooltip");
     option2.data = ("container", "#tooltip_container");
-    option2.selected = "disabled";
+    option2.value = "diagonals";
     option2.innerHTML = "DIAGONAL QUARTILES";
 
     var option3 = document.createElement("option");
@@ -184,14 +184,36 @@ function load_table(challenge_list=[]) {
     option3.title = "Apply k-means clustering algorithm to group the participants";
     option3.data = ("toggle", "list_tooltip");
     option3.data = ("container", "#tooltip_container");
+    option3.value = "clusters";
     option3.innerHTML = "K-MEANS CLUSTERING";
 
     group.appendChild(option1);
     group.appendChild(option2);
     group.appendChild(option3);
+    
+    
 
-    var selected_classifier = list.options[list.selectedIndex].id.split("__")[1];
+    var selected_classifier = classifier
+    
+    if (selected_classifier) {
+        
+        switch (selected_classifier) {
+            case "squares":
+                option1.selected = "disabled";
+                break;
+            case "diagonals":
+                option2.selected = "disabled";
+                break;
+            case "clusters":
+                option3.selected = "disabled";
+                break;
+            default:
+                option2.selected = "disabled";
+                break;
+        }
+    }
     compute_classification(selected_classifier, challenge_list);
+
 };
 
 export { load_table };
