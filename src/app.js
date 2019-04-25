@@ -1,52 +1,46 @@
 import $ from "jquery";
 import './app.css';
 import urljoin from 'url-join';
-import { type } from "os";
 
-function fill_in_table(divid, data) {
+function fill_in_table(divid, data){
+    
     //create table dinamically
     var table = document.getElementById(divid);
     var row = table.insertRow(-1);
-    row.insertCell(0).innerHTML = "<b>&#8595; TOOL / CHALLENGE &#8594; </b>";
+    row.insertCell(0).innerHTML = "<b>CHALLENGE &#8594 <br /><br /> &#8595; TOOL </b>";
     // append rows with all participants in the benchmark
-    Object.keys(data[Object.keys(data)[0]])
-        .sort()
-        .forEach(function (toolname, i) {
+    Object.keys(data[0].participants).forEach(function (toolname, i) {
             var row = table.insertRow(-1);
             var cell = row.insertCell(0);
             cell.innerHTML = toolname;
             cell.id = toolname;
-            // row.insertCell(1).innerHTML = data[key]["MuSiC"];
+
         });
     // append columns with challenges and results
-    Object.keys(data)
-        .sort()
-        .forEach(function (key, i) {
-            var column_values = [key];
-            Object.keys(data[key])
-                .sort()
-                .forEach(function (toolname, j) {
-                    column_values.push(data[key][toolname])
-                });
-            // open loop for each row and append cell
-            for (var i = 0; i < table.rows.length; i++) {
-                var cell = table.rows[i].insertCell(table.rows[i].cells.length);
-                cell.innerHTML = column_values[i];
-                // cell.className = "sibling-highlight";
-                if (i == 0) {
-                    var url = "https://dev-openebench.bsc.es/html/scientific/";
+    for (var num = 0; num < data.length; num++) {
 
-                    var bench_id = $('#bench_summary_table').data("input");
-
-                    // url = urljoin(url, bench_id + "_" + key);
-                    cell.id = column_values[i];
-                    cell.className = "rotate";
-                    // cell.innerHTML = "<a href='" + url + "' >" + column_values[i] + "</a>";
-                    cell.innerHTML = "<div ><a href='" + url + "'>" + column_values[i].split("_")[1] + "</a></div>";
-                }
-            };
-
+        var column_values = [data[num].acronym];
+        Object.keys(data[num].participants).forEach(function (toolname, j) {
+                column_values.push(data[num].participants[toolname])
         });
+        // open loop for each row and append cell
+        for (var i = 0; i < table.rows.length; i++) {
+            var cell = table.rows[i].insertCell(table.rows[i].cells.length);
+            cell.innerHTML = column_values[i];
+
+            if (i == 0) {
+                
+                var bench_id = $('#bench_summary_table').data("input");
+                var community_id = "OEBC" + bench_id.substring(4, 7);
+                var url = urljoin("https://dev-openebench.bsc.es/html/scientific/", community_id, bench_id, data[num]._id);
+
+                cell.id = column_values[i];
+                cell.className = "rotate";
+                cell.innerHTML = "<a href='" + url + "'>" + column_values[i] + "</a>";
+            }
+        };
+
+    };
 
 
 
