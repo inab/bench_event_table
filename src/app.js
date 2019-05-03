@@ -12,7 +12,8 @@ function fill_in_table(divid, data){
     Object.keys(data[0].participants).forEach(function (toolname, i) {
             var row = table.insertRow(-1);
             var cell = row.insertCell(0);
-            cell.innerHTML = toolname;
+            var technical_url = urljoin("https://dev-openebench.bsc.es/html/tool/", toolname.toLowerCase());
+            cell.innerHTML = "<a href='" + technical_url + "'>" + toolname + "</a>";
             cell.id = toolname;
 
         });
