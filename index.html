@@ -4,14 +4,14 @@
 
     <head>
         <span id="bench_table_span">
-                <div class="example-container mat-elevation-z8" *ngIf='bm'>
-                        <table id="bench_summary_table" class="summaryTable" data-input="OEBE0020000001"></table>
-                </div>
+                        <div class="table-scrollable" id="table-scrollable">
+                                <table id="bench_summary_table" class="summaryTable" data-count-fixed-columns="1" cellpadding="4"  data-input="OEBE0010000000"></table>
+                        </div>
 
         </span>
             <script type="text/javascript" src="./build/build.js"></script>
             <script>
-                    var l = ["OEBX0020000001", "OEBX0020000002", "OEBX0020000003"];
+                    var l = [];
                     load_table(l)
             </script>
     </head>

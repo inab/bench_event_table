@@ -2,34 +2,44 @@
         border: 1px solid black;
         border-collapse: collapse;
         text-align: center;
+        table-layout:fixed;
+     
 
     }
 
+    .row{
+        font-weight: 100;
+        text-align: center;
+        padding-right: 20px;
+    }
+
+    .col {
+        border: 1px solid black;
+        border-bottom: 3px solid black;
+        border-collapse: collapse;
+        text-align: center;
+        table-layout:fixed;
+        overflow:hidden;
+        word-wrap:break-word;  
+        font-weight: 100;
+    }
+
+    .summaryTable a {
+        text-decoration: none;
+    }
 
     .summaryTable {
-        /* position: relative; */
-        width: 100%;
         border-collapse: collapse;
         background-color: #ffffff;
-        border: 2px solid #0a589f;
-        /* table-layout:fixed; */
-        /* float: right; */
+        border: 1px solid black;
     }
 
-
-    .rotate {
-
-        /*  */
-        /* vertical-align: middle; */
-        /* writing-mode: vertical-lr; */
-        /* text-orientation: sideways; */
-
-    }
-
-    .rotate a {
-        text-decoration: none;
-
-    }
+    .table-scrollable {
+        width: auto;
+        overflow-x: auto;
+        overflow-y: hidden;
+        margin: 10px 0 ;
+    }  
 
 
     #no_benchmark_data {
@@ -53,4 +63,4 @@
     .classificators_list:hover {
         background-color: #b3cde0;
 
-    }
+    }    
