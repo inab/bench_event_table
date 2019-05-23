@@ -22,6 +22,7 @@
         overflow:hidden;
         word-wrap:break-word;  
         font-weight: 100;
+        width: 10vw;
     }
 
     .summaryTable a {
