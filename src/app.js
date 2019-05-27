@@ -144,7 +144,7 @@ function set_cell_colors() {
         var cell_value = $(this).html(); //get the value
 
         if (cell_value == "1") { //if then for if value is 1
-            $(this).css({ 'background': 'red', 'color': '#ffffff' });
+            $(this).css({ 'background': '#238b45', 'color': '#ffffff' });
         } else {
             $(this).css({ 'background': '#ffffff' });
         };
