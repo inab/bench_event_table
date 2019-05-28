@@ -1,0 +1,48 @@
+.oeb-table-scroll {
+  position: relative;
+  width:100%;
+  z-index: 1;
+  margin: auto;
+  overflow: scroll;
+  max-height: 500px;
+}
+.oeb-table-scroll table {
+  width: 100%;
+  min-width: 600px;
+  margin: auto;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.oeb-table-scroll th,
+.oeb-table-scroll td {
+  padding: 5px 10px;
+  border: 1px solid black;  
+  vertical-align: top;
+  text-align: center;
+}
+.oeb-table-scroll thead th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.oeb-table-scroll th {
+  position: -webkit-sticky;
+  position: sticky;
+  background: #0a589f;  
+  z-index:3;
+}
+.oeb-table-scroll th a{
+  color: #fff;
+}
+.oeb-table-scroll th:first-child {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+.oeb-table-scroll thead th:first-child{
+  z-index: 4;
+  color: #fff;
+}
