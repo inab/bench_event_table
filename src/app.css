@@ -9,9 +9,14 @@
 
     .row{
         font-weight: 100;
-        text-align: center;
-        padding-right: 20px;
+        text-align: left;
+        display: inline;
+        /* word-wrap: break-word; */
+        /* word-break: break-all; */
+        padding-right: 50px;
     }
+
+    
 
     .col {
         border: 1px solid black;
@@ -39,7 +44,7 @@
         width: auto;
         overflow-x: auto;
         overflow-y: hidden;
-        margin: 10px 0 ;
+        margin: 10px 0  ;
     }  
 
 

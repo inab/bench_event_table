@@ -8,7 +8,7 @@ function app_handle_listing_horisontal_scroll()
   var table_obj = $('.summaryTable');
   
   //get count fixed collumns params
-  var count_fixed_collumns = table_obj.attr('data-count-fixed-columns')
+  var count_fixed_collumns = 1
              
   if(count_fixed_collumns>0)
   {
@@ -71,7 +71,7 @@ function app_handle_listing_horisontal_scroll()
          {                       
            $(this).css('position','absolute')
                   .css('margin-left','-'+table_collumns_margin[index]+'px')
-                  .css('width',table_collumns_width[index])
+                  .css('width',table_collumns_margin[index]+'px')
                   
            $(this).addClass('table-fixed-cell')
          }
@@ -93,7 +93,7 @@ function fill_in_table(divid, data){
     Object.keys(data[0].participants).forEach(function (toolname, i) {
             var row = table.insertRow(-1);
             var th = document.createElement('th');
-            var technical_url = urljoin("https://dev-openebench.bsc.es/html/tool/", toolname.toLowerCase());
+            var technical_url = urljoin("https://openebench.bsc.es/html/tool/", toolname.toLowerCase());
             th.innerHTML = "<a href='" + technical_url + "'>" + toolname + "</a>";
             th.className = "row";
             row.appendChild(th);
@@ -114,7 +114,7 @@ function fill_in_table(divid, data){
                 
                 var bench_id = $('#bench_summary_table').data("input");
                 var community_id = "OEBC" + bench_id.substring(4, 7);
-                var url = urljoin("https://dev-openebench.bsc.es/html/scientific/", community_id, data[num]._id);
+                var url = urljoin("https://openebench.bsc.es/html/scientific/", community_id, data[num]._id);
                 
                 var th = document.createElement('th');
                 th.innerHTML = "<a href='" + url + "'>" + column_values[i] + "</a>";
