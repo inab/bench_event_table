@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/app.js',
+    entry: './index.js',
     output: {
         path: path.resolve(__dirname, 'build'),
         libraryTarget: 'this',

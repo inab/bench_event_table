@@ -1,138 +1,71 @@
 import $ from "jquery";
-import './app.css';
+import './style.css';
 import urljoin from 'url-join';
 
-function app_handle_listing_horisontal_scroll()
-{
-  //get table object   
-  var table_obj = $('.summaryTable');
-  
-  //get count fixed collumns params
-  var count_fixed_collumns = 1
-             
-  if(count_fixed_collumns>0)
-  {
-    //get wrapper object
-    var wrapper_obj = $('.table-scrollable');
-    
-    var wrapper_left_margin = 0;
-    
-    var table_collumns_width = new Array();    
-    var table_collumns_margin = new Array();
-    
-    //calculate wrapper margin and fixed column width
-    $('th',table_obj).each(function(index){
-       if(index<count_fixed_collumns)
-       {
-         wrapper_left_margin += $(this).outerWidth();
-         table_collumns_width[index] = $(this).outerWidth();
-       }
-    })
-    
-    //calcualte margin for each column  
-    $.each( table_collumns_width, function( key, value ) {
-      if(key==0)
-      {
-        table_collumns_margin[key] = wrapper_left_margin;
-      }
-      else
-      {
-        var next_margin = 0;
-        $.each( table_collumns_width, function( key_next, value_next ) {
-          if(key_next<key)
-          {
-            next_margin += value_next;
-          }
-        });
-        
-        table_collumns_margin[key] = wrapper_left_margin-next_margin;
-      }
-    });
-     
-    //set wrapper margin               
-    if(wrapper_left_margin>0)
-    {
-      wrapper_obj.css('cssText','margin-left:'+wrapper_left_margin+'px !important; width: auto')
-    }
-    
-    //set position for fixed columns
-    $('tr',table_obj).each(function(){  
-      
-      //get current row height
-      var current_row_height = $(this).outerHeight();
-           
-      $('th,td',$(this)).each(function(index){
-         
-         //set row height for all cells
-         $(this).css('height',current_row_height)
-         
-         //set position 
-         if(index<count_fixed_collumns)
-         {                       
-           $(this).css('position','absolute')
-                  .css('margin-left','-'+table_collumns_margin[index]+'px')
-                  .css('width',table_collumns_margin[index]+'px')
-                  
-           $(this).addClass('table-fixed-cell')
-         }
-      })
-    })    
-  }
-}  
+function fill_in_table(divid, data) {
 
-function fill_in_table(divid, data){
-    
     //create table dinamically
-    var table = document.getElementById(divid);
-    var row = table.insertRow(-1);
+    var table = document.createElement('table')
+    table.id = "oeb-main-table";
+    table.className = "oeb-main-table";
+
+
+    var divTable = document.getElementById(divid);
+
+    
+    divTable.appendChild(table);
+    var thead = document.createElement('thead');
+    var tbody = document.createElement('tbody');
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+
+    //add challenge and tool fixed top left
+    var row = thead.insertRow(-1)
     var th = document.createElement('th');
-    th.innerHTML = "<b>CHALLENGE &#8594 <br />&#8595; TOOL </b>";
+    th.innerHTML = "<b>CHALLENGE &#8594  <br> TOOL &#8595</b>";
     row.appendChild(th);
+
+
 
     // append rows with all participants in the benchmark
     Object.keys(data[0].participants).forEach(function (toolname, i) {
-            var row = table.insertRow(-1);
-            var th = document.createElement('th');
-            var technical_url = urljoin("https://openebench.bsc.es/html/tool/", toolname.toLowerCase());
-            th.innerHTML = "<a href='" + technical_url + "'>" + toolname + "</a>";
-            th.className = "row";
-            row.appendChild(th);
+        var row = tbody.insertRow(-1);
+        var th = document.createElement('th');
+        var technical_url = urljoin("https://openebench.bsc.es/html/tool/", toolname.toLowerCase());
+        th.innerHTML = "<a href='" + technical_url + "'>" + toolname + "</a>";
+        row.appendChild(th);
+    });
 
-        });
+
     // append columns with challenges and results
     for (var num = 0; num < data.length; num++) {
 
         var column_values = [data[num].acronym];
         Object.keys(data[num].participants).forEach(function (toolname, j) {
-                column_values.push(data[num].participants[toolname])
+            column_values.push(data[num].participants[toolname])
         });
         // open loop for each row and append cell
-        for (var i = 0; i < table.rows.length; i++) {
-            
 
+
+        //first row with headers
+        for (var i = 0; i < table.rows.length; i++) {
             if (i == 0) {
-                
-                var bench_id = $('#bench_summary_table').data("input");
+                var bench_id = $('#' + divid).data("benchmarkingevent")
                 var community_id = "OEBC" + bench_id.substring(4, 7);
                 var url = urljoin("https://openebench.bsc.es/html/scientific/", community_id, data[num]._id);
-                
                 var th = document.createElement('th');
                 th.innerHTML = "<a href='" + url + "'>" + column_values[i] + "</a>";
-                th.className = "row";
                 th.id = column_values[i];
-                th.className = "col"
-                table.rows[i].appendChild(th);
-
+                thead.rows[i].appendChild(th);
             } else {
-                var cell = table.rows[i].insertCell(table.rows[i].cells.length);
+                //non headers
+                var cell = tbody.rows[i - 1].insertCell(table.rows[i].cells.length);
                 cell.innerHTML = column_values[i];
             }
         };
 
     };
-
-
-
 };
 
 function set_cell_colors() {
@@ -177,11 +110,11 @@ async function fetchUrl(url, http_method, challenge_list) {
 function compute_classification(selected_classifier, challenge_list) {
 
     // every time a new classification is compute the previous results table is deleted (if it exists)
-    if (document.getElementById("bench_summary_table") != null) {
-        document.getElementById("bench_summary_table").innerHTML = '';
+    if (document.getElementById("oeb-table-scroll") != null) {
+        document.getElementById("oeb-table-scroll").innerHTML = '';
     };
 
-    var path_data = $('#bench_summary_table').data("input") + "/" + selected_classifier;
+    var path_data = $('#oeb-table-scroll').data("benchmarkingevent") + "/" + selected_classifier;
     path_data = urljoin("https://dev-openebench.bsc.es/bench_event/api/", path_data);
     let http_method;
 
@@ -200,20 +133,18 @@ function compute_classification(selected_classifier, challenge_list) {
         })
         .then(results => {
             if (results.data !== undefined && results.data == null) {
-                document.getElementById("bench_dropdown_list").remove();
+                document.getElementById("oeb-main-table").remove();
                 var para = document.createElement("td");
                 para.id = "no_benchmark_data"
                 var err_txt = document.createTextNode("No data available for the selected benchmark");
                 para.appendChild(err_txt);
-                var element = document.getElementById("bench_summary_table");
+                var element = document.getElementById("oeb-main-table");
                 element.appendChild(para);
 
             } else {
-                fill_in_table("bench_summary_table", results);
+                console.log(results)
+                fill_in_table("oeb-table-scroll", results);
                 set_cell_colors();
-                $(function(){
-                    app_handle_listing_horisontal_scroll()
-                })
             }
         }
         )
@@ -232,7 +163,7 @@ function load_table(challenge_list = [], classifier = "diagonal") {
     var list = document.createElement("select");
     list.id = "bench_dropdown_list";
     list.className = "classificators_list";
-    var bench_table = document.getElementById("table-scrollable");
+    var bench_table = document.getElementById("oeb-table-scroll");
     bench_table.parentNode.insertBefore(list, bench_table);
 
     list.addEventListener('change', function (d) {
@@ -245,7 +176,6 @@ function load_table(challenge_list = [], classifier = "diagonal") {
     list.add(group);
 
     // add list options
-
     var option1 = document.createElement("option");
     option1.class = "selection_option";
     option1.id = "classificator__squares";
@@ -276,13 +206,13 @@ function load_table(challenge_list = [], classifier = "diagonal") {
     group.appendChild(option1);
     group.appendChild(option2);
     group.appendChild(option3);
-    
-    
+
+
 
     var selected_classifier = classifier
-    
+
     if (selected_classifier) {
-        
+
         switch (selected_classifier) {
             case "squares":
                 option1.selected = "disabled";
@@ -303,7 +233,3 @@ function load_table(challenge_list = [], classifier = "diagonal") {
 };
 
 export { load_table };
-
-
-// var challenge_list = [];
-// load_table(challenge_list);
