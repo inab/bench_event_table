@@ -2,7 +2,7 @@ import $ from "jquery";
 import './style.css';
 import urljoin from 'url-join';
 
-function fill_in_table(divid, data) {
+function fill_in_table(divid, data, mode) {
 
     //create table dinamically
     var table = document.createElement('table')
@@ -26,13 +26,12 @@ function fill_in_table(divid, data) {
     th.innerHTML = "<b>CHALLENGE &#8594  <br> TOOL &#8595</b>";
     row.appendChild(th);
 
-
-
+    
     // append rows with all participants in the benchmark
     Object.keys(data[0].participants).forEach(function (toolname, i) {
         var row = tbody.insertRow(-1);
         var th = document.createElement('th');
-        var technical_url = urljoin("https://openebench.bsc.es/html/tool/", toolname.toLowerCase());
+        var technical_url = urljoin("https://"+mode+".bsc.es/html/tool/", toolname.toLowerCase());
         th.innerHTML = "<a href='" + technical_url + "'>" + toolname + "</a>";
         row.appendChild(th);
     });
@@ -53,7 +52,8 @@ function fill_in_table(divid, data) {
             if (i == 0) {
                 var bench_id = $('#' + divid).data("benchmarkingevent")
                 var community_id = "OEBC" + bench_id.substring(4, 7);
-                var url = urljoin("https://openebench.bsc.es/html/scientific/", community_id, data[num]._id);
+                
+                var url = urljoin("https://"+mode+".bsc.es/html/scientific/", community_id, data[num]._id);
                 var th = document.createElement('th');
                 th.innerHTML = "<a href='" + url + "'>" + column_values[i] + "</a>";
                 th.id = column_values[i];
@@ -114,6 +114,9 @@ function compute_classification(selected_classifier, challenge_list) {
         document.getElementById("oeb-table-scroll").innerHTML = '';
     };
 
+    //check for mode by default it is production if no param is given
+    var mode = $('#oeb-table-scroll').data("mode")? "dev-openebench" : "openebench"
+
     var path_data = $('#oeb-table-scroll').data("benchmarkingevent") + "/" + selected_classifier;
     path_data = urljoin("https://dev-openebench.bsc.es/bench_event/api/", path_data);
     let http_method;
@@ -142,8 +145,7 @@ function compute_classification(selected_classifier, challenge_list) {
                 element.appendChild(para);
 
             } else {
-                console.log(results)
-                fill_in_table("oeb-table-scroll", results);
+                fill_in_table("oeb-table-scroll", results, mode);
                 set_cell_colors();
             }
         }
@@ -228,6 +230,8 @@ function load_table(challenge_list = [], classifier = "diagonal") {
                 break;
         }
     }
+
+
     compute_classification(selected_classifier, challenge_list);
 
 };

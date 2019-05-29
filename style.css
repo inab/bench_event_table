@@ -30,12 +30,13 @@
 .oeb-table-scroll th {
   position: -webkit-sticky;
   position: sticky;
-  background: #0a589f;  
+  background: #fff;  
+  /* overflow: hidden; */
   z-index:3;
 }
-.oeb-table-scroll th a{
-  color: #fff;
-}
+/* .oeb-table-scroll th a{
+ 
+}*/
 .oeb-table-scroll th:first-child {
   position: -webkit-sticky;
   position: sticky;
@@ -44,5 +45,5 @@
 }
 .oeb-table-scroll thead th:first-child{
   z-index: 4;
-  color: #fff;
+  
 }
