@@ -1,5 +1,5 @@
 import $ from "jquery";
-import './style.css';
+import './app.css';
 import urljoin from 'url-join';
 
 function fill_in_table(divid, data, mode) {
@@ -136,12 +136,12 @@ function compute_classification(selected_classifier, challenge_list) {
         })
         .then(results => {
             if (results.data !== undefined && results.data == null) {
-                document.getElementById("oeb-main-table").remove();
+                document.getElementById("bench_dropdown_list").remove();
                 var para = document.createElement("td");
                 para.id = "no_benchmark_data"
-                var err_txt = document.createTextNode("No data available for the selected benchmark");
+                var err_txt = document.createTextNode("No data available for the benchmarking event: '" + $('#oeb-table-scroll').data("benchmarkingevent") + "'");
                 para.appendChild(err_txt);
-                var element = document.getElementById("oeb-main-table");
+                var element = document.getElementById("oeb-table-scroll");
                 element.appendChild(para);
 
             } else {

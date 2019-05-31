@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "npm install",
-    "prod": "./node_modules/.bin/webpack-cli index.js --output=build/build.js -p;",
-    "dev": "./node_modules/.bin/webpack-cli index.js --output=build/build.js -d -w;",
+    "prod": "./node_modules/.bin/webpack-cli src/app.js --output=build/build.js -p;",
+    "dev": "./node_modules/.bin/webpack-cli src/app.js --output=build/build.js -d -w;",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Javier Garrayo <javier.garrayo@bsc.es>, Vicky Sundesha <vicky.sundesha@bsc.es>",
