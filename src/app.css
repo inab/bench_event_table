@@ -49,7 +49,7 @@
 }
 
 
-#no_benchmark_data {
+.no_benchmark_data {
   text-align: center;
   border: none !important;
 }
