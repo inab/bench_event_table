@@ -32,8 +32,12 @@ function fill_in_table(divid, data, mode, tool_elixir_ids, community_id) {
     Object.keys(data[0].participants).forEach(function (toolname, i) {
         var row = tbody.insertRow(-1);
         var th = document.createElement('th');
-        var technical_url = urljoin("https://"+mode+".bsc.es/html/tool/", tool_elixir_ids[toolname]);
-        th.innerHTML = "<a href='" + technical_url + "'>" + toolname + "</a>";
+        if (tool_elixir_ids[toolname] != null){
+            var technical_url = urljoin("https://"+mode+".bsc.es/html/tool/", tool_elixir_ids[toolname]);
+            th.innerHTML = "<a href='" + technical_url + "'>" + toolname + "</a>";
+        } else {
+            th.innerHTML = "<a>" + toolname + "</a>";
+        }
         row.appendChild(th);
     });
 
@@ -171,10 +175,11 @@ function compute_classification(divid, selected_classifier, challenge_list) {
                     tool_list.forEach( function(tool) {
                         if (tool.registry_tool_id != null) {
                             tool_elixir_ids[tool.name] = tool.registry_tool_id.split(":")[1]; 
+                        } else {
+                            tool_elixir_ids[tool.name] = null;
                         }
                         
                     });
-
                     fill_in_table(divid, results, mode, tool_elixir_ids, community_id);
                     set_cell_colors();
                 } );
