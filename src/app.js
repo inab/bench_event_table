@@ -173,8 +173,8 @@ function compute_classification(divid, selected_classifier, challenge_list) {
                     // iterate over the list of tools to generate a dictionary
                     let tool_elixir_ids = {};
                     tool_list.forEach( function(tool) {
-                        if (tool.registry_tool_id != null) {
-                            tool_elixir_ids[tool.name] = tool.registry_tool_id.split(":")[1]; 
+                        if (tool.registry_tool_id != null ) {
+                            tool_elixir_ids[tool.name] = tool.registry_tool_id.split(":")[1].toLowerCase(); 
                         } else {
                             tool_elixir_ids[tool.name] = null;
                         }
