@@ -1,72 +1,73 @@
-    .summaryTable td {
-        border: 1px solid black;
-        border-collapse: collapse;
-        text-align: center;
-        table-layout:fixed;
-     
+.oeb-table-scroll {
+  position: relative;
+  width:100%;
+  z-index: 1;
+  margin: auto;
+  overflow: scroll;
+  max-height: 500px;
+}
+.oeb-table-scroll table {
+  width: 100%;
+  min-width: 600px;
+  margin: auto;
+  border-collapse: separate;
+  border-spacing: 0;
+}
 
-    }
+.oeb-table-scroll th,
+.oeb-table-scroll td {
+  padding: 5px 10px;
+  border: 1px solid black;  
+  vertical-align: top;
+  text-align: center;
+}
+.oeb-table-scroll thead th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
 
-    .row{
-        font-weight: 100;
-        text-align: left;
-        display: inline;
-        /* word-wrap: break-word; */
-        /* word-break: break-all; */
-        padding-right: 50px;
-    }
-
-    
-
-    .col {
-        border: 1px solid black;
-        border-bottom: 3px solid black;
-        border-collapse: collapse;
-        text-align: center;
-        table-layout:fixed;
-        overflow:hidden;
-        word-wrap:break-word;  
-        font-weight: 100;
-        width: 10vw;
-    }
-
-    .summaryTable a {
-        text-decoration: none;
-    }
-
-    .summaryTable {
-        border-collapse: collapse;
-        background-color: #ffffff;
-        border: 1px solid black;
-    }
-
-    .table-scrollable {
-        width: auto;
-        overflow-x: auto;
-        overflow-y: hidden;
-        margin: 10px 0  ;
-    }  
+.oeb-table-scroll th {
+  position: -webkit-sticky;
+  position: sticky;
+  background: #fff;  
+  /* overflow: hidden; */
+  z-index:3;
+}
+/* .oeb-table-scroll th a{
+ 
+}*/
+.oeb-table-scroll th:first-child {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+.oeb-table-scroll thead th:first-child{
+  z-index: 4;
+  
+}
 
 
-    #no_benchmark_data {
-        text-align: center;
-        border: none !important;
-    }
+.no_benchmark_data {
+  text-align: center;
+  border: none !important;
+}
 
-    .classificators_list {
-        background-color: #0A58A2;
+.classificators_list {
+  background-color: #0A58A2;
 
-        border-radius: 8px;
-        color: #fff;
-        font-size: 1vw;
-        padding-left: 25px;
-        padding-right: 25px;
-        text-align: center;
-        width: 20vw;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1vw;
+  padding-left: 25px;
+  padding-right: 25px;
+  text-align: center;
+  width: 20vw;
 
-    }
+}
 
-    .classificators_list:hover {
-        background-color: #b3cde0;
+.classificators_list:hover {
+  background-color: #b3cde0;
 
-    }    
+} 
