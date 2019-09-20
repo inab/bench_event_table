@@ -44,7 +44,7 @@ function fill_in_table(divid, data, mode, tool_elixir_ids, community_id) {
         var row = tbody.insertRow(-1);
         var th = document.createElement('th');
         if (tool_elixir_ids[toolname] != null) {
-            var technical_url = urljoin("https://" + mode + ".bsc.es/html/tool/", tool_elixir_ids[toolname]);
+            var technical_url = urljoin("https://" + mode + ".bsc.es/tool/", tool_elixir_ids[toolname]);
             th.innerHTML = "<a href='" + technical_url + "'>" + toolname + "</a>";
         } else {
             th.innerHTML = "<a>" + toolname + "</a>";
@@ -67,7 +67,7 @@ function fill_in_table(divid, data, mode, tool_elixir_ids, community_id) {
         for (var i = 0; i < table.rows.length; i++) {
             if (i == 0) {
 
-                var url = urljoin("https://" + mode + ".bsc.es/html/scientific/", community_id, data[num]._id);
+                var url = urljoin("https://" + mode + ".bsc.es/scientific/", community_id, data[num]._id);
                 var th = document.createElement('th');
                 th.innerHTML = "<a href='" + url + "'>" + column_values[i] + "</a>";
                 th.id = column_values[i];
