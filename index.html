@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
-</head>
-<body>
-        
-<!-- <div  class="oeb-table-scroll" data-benchmarkingevent="OEBE0010000000" data-mode="dev"></div> -->
-<div  class="oeb-table" data-benchmarkingevent="OEBE0020000000" data-mode="dev"></div>
-
-
-</body>
-<script src="./build/build.js"></script>
-<script>
-    run_summary_table();
-    setTimeout(() => {
-        run_summary_table(["OEBX0020000001","OEBX0020000002","OEBX0020000007","OEBX0020000004","OEBX0020000009"], "OEBE00200000000")    
-    }, 3000);
-   
-</script>
-
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link rel="stylesheet" href="style.css" />
+		<title>Document</title>
+	</head>
+	<body>
+		<!-- <div  class="oeb-table-scroll" data-benchmarkingevent="OEBE0010000000" data-mode="dev"></div> -->
+		<div class="oeb-table" data-benchmarkingevent="OEBE0020000000"></div>
+		<div class="oeb-table" data-benchmarkingevent="OEBE0020000001"></div>
+	</body>
+	<script src="./build/build.js"></script>
+	<script>
+		run_summary_table();
+		setTimeout(() => {
+			run_summary_table(['OEBX0020000001', 'OEBX0020000002', 'OEBX0020000007', 'OEBX0020000004', 'OEBX0020000009'], 'OEBE0020000000');
+		}, 5000);
+	</script>
 </html>
