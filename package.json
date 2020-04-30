@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "css-loader": "^1.0.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "apollo-fetch": "^0.7.0",
     "style-loader": "^0.21.0",
     "url-join": "^4.0.0",
