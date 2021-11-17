@@ -11,7 +11,7 @@
   },
   "author": "Javier Garrayo <javier.garrayo@bsc.es>, Vicky Sundesha <vicky.sundesha@bsc.es>",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "css-loader": "^1.0.1",
     "jquery": "^3.4.1",
     "apollo-fetch": "^0.7.0",
@@ -20,7 +20,6 @@
     "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/inab/bench_event_table.git"
