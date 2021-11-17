@@ -1,8 +1,8 @@
 {
-  "name": "challengetable",
-  "version": "1.0.0",
+  "name": "oeb-classification-table",
+  "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/build.js",
   "scripts": {
     "build": "npm install",
     "prod": "./node_modules/.bin/webpack-cli src/app.js --output=build/build.js -p;",
