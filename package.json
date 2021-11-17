@@ -1,12 +1,12 @@
 {
-  "name": "oeb-classification-table",
+  "name": "@inb/oeb-classification-table",
   "version": "0.1.0",
-  "description": "",
+  "description": "Repository that contains the table used in OpenEBench for the classification of benchmarking results",
   "main": "build/build.js",
   "scripts": {
     "build": "npm install",
-    "prod": "./node_modules/.bin/webpack-cli src/app.js --output=build/build.js -p;",
-    "dev": "./node_modules/.bin/webpack-cli src/app.js --output=build/build.js -d -w;",
+    "prod": "webpack-cli src/app.js --output=build/build.js -p;",
+    "dev": "webpack-cli src/app.js --output=build/build.js -d -w;",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Javier Garrayo <javier.garrayo@bsc.es>, Vicky Sundesha <vicky.sundesha@bsc.es>",
@@ -19,5 +19,21 @@
     "url-join": "^4.0.0",
     "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inab/bench_event_table.git"
+  },
+  "keywords": [
+    "visualization",
+    "classification",
+    "table",
+    "benchmarking",
+    "openEBench"
+  ],
+  "bugs": {
+    "url": "https://github.com/inab/bench_event_table/issues"
+  },
+  "homepage": "https://github.com/inab/bench_event_table#readme"
 }
