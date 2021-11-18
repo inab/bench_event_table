@@ -5,7 +5,7 @@ Repository that contains the table used in OpenEBench for the classification of 
 See a demo of how this visualizer works [here](https://inab.github.io/bench_event_table/)
 
 ## NPM Package
-NPM Package `@inb/oeb-classification-table published to: https://www.npmjs.com/package/@inb/oeb-classification-table
+NPM Package `@inb/oeb-classification-table` published to: https://www.npmjs.com/package/@inb/oeb-classification-table
 
 ## Classification methods
 * Square quartiles - divide the plotting area in four squares by getting the 2nd quartile of the X and Y metrics.
