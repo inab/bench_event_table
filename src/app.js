@@ -109,7 +109,9 @@ async function fetchUrl(url, http_method, challenge_list) {
 
 function compute_classification(divid, selected_classifier, challenge_list) {
 	//check for mode by default it is production if no param is given
-	var mode = $('#' + divid).data('mode') ? 'dev-openebench' : 'openebench';
+	var mode = $('#' + divid).data('mode') ? $('#' + divid).data('mode') : 'openebench';
+
+	const api_url = $('#' + divid).data("api-url")
 
 	var path_data = $('#' + divid).data('benchmarkingevent') + '/' + selected_classifier;
 	path_data = urljoin('https://dev-openebench.bsc.es/rest/bench_event_api/', path_data);
@@ -144,7 +146,8 @@ function compute_classification(divid, selected_classifier, challenge_list) {
 				var community_id = 'OEBC' + bench_id.substring(4, 7);
 
 				const fetch = createApolloFetch({
-					uri: urljoin('https://' + mode + '.bsc.es/', 'sciapi/graphql')
+					//fallback to legacy if no api_url is defined
+					uri: api_url ? api_url : urljoin('https://' + mode + '.bsc.es/', 'sciapi/graphql')
 				});
 
 				const fetchData = () =>

@@ -7,6 +7,13 @@ See a demo of how this visualizer works [here](https://inab.github.io/bench_even
 ## NPM Package
 NPM Package `@inb/oeb-classification-table` published to: https://www.npmjs.com/package/@inb/oeb-classification-table
 
+## Data Input
+Per default it consumes the [OpenEBench Sci-API](https://openebench.bsc.es/sciapi/) (deprecated).
+
+It is also able to consume the new API [OpenEBench API Scientific](https://dev-openebench.bsc.es/api/scientific/). 
+The API can be set by supplying the following attribute: `data-api-url="{{ API_URL }}"`
+
+
 ## Classification methods
 * Square quartiles - divide the plotting area in four squares by getting the 2nd quartile of the X and Y metrics.
 ![squares](pictures/sqr_example.png)
@@ -47,4 +54,4 @@ The HTML file should look like [this](./index.html)
 
 -   data-benchmarkingevent : the official OEB id of the benchmarking event you want to visualize
 -   class: should always be *'oeb-table'*
-
+-   data-api-url: Should always contain the full API URL e.g. https://openebench.bsc.es/api/scientific/graphql
