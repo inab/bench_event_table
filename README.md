@@ -45,9 +45,7 @@ The HTML file should look like [this](./index.html)
 -   data-api-url: Should always contain the full API URL e.g. https://openebench.bsc.es/api/scientific/graphql
 
 Example:
-`		
-  <div class="oeb-table" data-benchmarkingevent="OEBE0020000000" data-api-url="{{ API_URL }}"></div>
-`
+`	<div class="oeb-table" data-benchmarkingevent="OEBE0020000000" data-api-url="{{ API_URL }}"></div> `
 
 ### Alternative way: Clone from repository
 
