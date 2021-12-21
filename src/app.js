@@ -114,7 +114,7 @@ function compute_classification(divid, selected_classifier, challenge_list) {
 	const api_url = $('#' + divid).data("api-url")
 
 	var path_data = $('#' + divid).data('benchmarkingevent') + '/' + selected_classifier;
-	path_data = urljoin('https://dev-openebench.bsc.es/rest/bench_event_api/', path_data);
+	path_data = urljoin('https://openebench.bsc.es/rest/bench_event_api/', path_data);
 	let http_method;
 
 	if (challenge_list.length === undefined || challenge_list.length == 0) {
