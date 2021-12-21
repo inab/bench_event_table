@@ -3,13 +3,10 @@ import './app.css';
 import urljoin from 'url-join';
 import { createApolloFetch } from 'apollo-fetch';
 
-function fill_in_table(divid, data, mode, tool_elixir_ids, community_id) {
+function fill_in_table(divid, challenges, mode, tool_elixir_ids, community_id) {
 	// every time a new classification is compute the previous results table is deleted (if it exists)
-	if (document.getElementById(divid + '-oeb-main-table') != null) {
-		document.getElementById(divid + '-oeb-main-table').remove();
-		document.getElementById(divid + 'oeb-table-scroll').remove();
-		// document.getElementById(divid + '_bench_dropdown_list').remove()
-	}
+	remove_table(divid)
+
 	var scrollableDiv = document.createElement('div');
 	scrollableDiv.id = divid + 'oeb-table-scroll';
 	scrollableDiv.className = 'oeb-table-scroll';
@@ -36,7 +33,15 @@ function fill_in_table(divid, data, mode, tool_elixir_ids, community_id) {
 	row.appendChild(th);
 
 	// append rows with all participants in the benchmark
-	Object.keys(data[0].participants).forEach(function(toolname, i) {
+
+	var quartile_name_map = {
+		1: 'Q1', 
+		2: 'Q2', 
+		3: 'Q3', 
+		4: 'Q4'
+	};
+
+	Object.keys(challenges[0].participants).forEach(function(toolname, i) {
 		var row = tbody.insertRow(-1);
 		var th = document.createElement('th');
 		if (tool_elixir_ids[toolname] != null) {
@@ -45,29 +50,31 @@ function fill_in_table(divid, data, mode, tool_elixir_ids, community_id) {
 		} else {
 			th.innerHTML = '<a>' + toolname + '</a>';
 		}
+		th.dataset.toolname = toolname;
 		row.appendChild(th);
 	});
 
 	// append columns with challenges and results
-	for (var num = 0; num < data.length; num++) {
-		var column_values = [data[num].acronym];
-		Object.keys(data[num].participants).forEach(function(toolname, j) {
-			column_values.push(data[num].participants[toolname]);
+	for (var num = 0; num < challenges.length; num++) {
+		var column_value_dict = {challengeName: challenges[num].acronym};
+		Object.keys(challenges[num].participants).forEach(function(toolname, j) {
+			column_value_dict[toolname] = challenges[num].participants[toolname];
 		});
 		// open loop for each row and append cell
 
 		//first row with headers
 		for (var i = 0; i < table.rows.length; i++) {
 			if (i == 0) {
-				var url = urljoin('https://' + mode + '.bsc.es/scientific/', community_id, data[num]._id);
+				var url = urljoin('https://' + mode + '.bsc.es/scientific/', community_id, challenges[num]._id);
 				var th = document.createElement('th');
-				th.innerHTML = "<a href='" + url + "'>" + column_values[i] + '</a>';
-				th.id = column_values[i];
+				th.innerHTML = "<a href='" + url + "'>" + column_value_dict['challengeName'] + '</a>';
+				th.id = column_value_dict['challengeName'];
 				thead.rows[i].appendChild(th);
 			} else {
 				//non headers
 				var cell = tbody.rows[i - 1].insertCell(table.rows[i].cells.length);
-				cell.innerHTML = column_values[i];
+				const row_tool_name = table.rows[i].cells[0].dataset.toolname;
+				cell.innerHTML = quartile_name_map[column_value_dict[row_tool_name]];
 			}
 		}
 	}
@@ -81,9 +88,15 @@ function set_cell_colors() {
 
 		var cell_value = $(this).html(); //get the value
 
-		if (cell_value == '1') {
+		if (cell_value == 'Q1') {
 			//if then for if value is 1
 			$(this).css({ background: '#238b45', color: '#ffffff' });
+		} else if (cell_value == 'Q2') {
+			$(this).css({ background: '#74c575' });
+		} else if (cell_value == 'Q3') {
+			$(this).css({ background: '#bbe4b3' });
+		} else if (cell_value == 'Q4') {
+			$(this).css({ background: '#edf8e9' });
 		} else {
 			$(this).css({ background: '#ffffff' });
 		}
@@ -108,6 +121,8 @@ async function fetchUrl(url, http_method, challenge_list) {
 }
 
 function compute_classification(divid, selected_classifier, challenge_list) {
+	show_loading_spinner(divid, true);
+
 	//check for mode by default it is production if no param is given
 	var mode = $('#' + divid).data('mode') ? $('#' + divid).data('mode') : 'openebench';
 
@@ -173,8 +188,10 @@ function compute_classification(divid, selected_classifier, challenge_list) {
 							tool_elixir_ids[tool.name] = null;
 						}
 					});
+
 					fill_in_table(divid, results, mode, tool_elixir_ids, community_id);
 					set_cell_colors();
+					show_loading_spinner(divid, false);
 				});
 			}
 		})
@@ -187,8 +204,12 @@ function load_table(divid, challenge_list = [], classifier = 'diagonal') {
 		//add dropdown list
 		var list = document.createElement('select');
 		list.id = divid + '_bench_dropdown_list';
-		list.className = 'classificators_list';
+		list.className = 'classificator_list';
 		var bench_table = document.getElementById(divid);
+
+		var list_label = document.createElement('label');
+		list_label.htmlFor = divid + '_bench_dropdown_list';
+		list_label.innerText = 'Classification Method:';
 
 		// add option group
 		var group = document.createElement('OptGroup');
@@ -247,6 +268,7 @@ function load_table(divid, challenge_list = [], classifier = 'diagonal') {
 			}
 		}
 
+		bench_table.appendChild(list_label);
 		bench_table.appendChild(list);
 	}
 
@@ -275,11 +297,34 @@ function run_summary_table(challenge_list = [], active_table = null) {
 			//set chart id
 			var divid = dataId.replace(':', '_');
 			y.id = divid;
+			remove_table(divid);
 			load_table(divid, challenge_list);
 			i++;
 		}
 	} else {
+		remove_table(active_table);
 		load_table(active_table, challenge_list);
 	}
 }
+
+function remove_table(divid){
+	if (document.getElementById(divid + '-oeb-main-table') != null) {
+		document.getElementById(divid + '-oeb-main-table').remove();
+		document.getElementById(divid + 'oeb-table-scroll').remove();
+	}
+}
+
+function show_loading_spinner(divid, loading){
+	if (!document.getElementById('loading')){
+		var loadingSpinner = document.createElement('div');
+		loadingSpinner.id = 'loading';
+		document.getElementById(divid).appendChild(loadingSpinner);
+	}
+	if (loading) {
+		document.getElementById('loading').style.display = "inline-block";
+	} else {
+		document.getElementById('loading').style.display = "none";
+	}
+}
+
 export { run_summary_table };
