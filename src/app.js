@@ -146,10 +146,11 @@ function compute_classification(divid, selected_classifier, challenge_list) {
 			return response.json();
 		})
 		.then(results => {
-			if (results.data !== undefined && results.data == null) {
-				document.getElementById(divid + '_bench_dropdown_list').remove();
-				var para = document.createElement('td');
-				para.className = 'no_benchmark_data';
+			if ((results.data !== undefined && results.data == null) || results.length == 0) {
+				show_loading_spinner(divid, false);
+				document.getElementById(divid).innerHTML = "";
+				var para = document.createElement('div');
+				para.className = 'alert alert-info';
 				var err_txt = document.createTextNode(
 					"No data available for the benchmarking event: '" + $('#' + divid).data('benchmarkingevent') + "'"
 				);
