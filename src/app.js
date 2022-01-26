@@ -127,9 +127,10 @@ function compute_classification(divid, selected_classifier, challenge_list) {
 	var mode = $('#' + divid).data('mode') ? $('#' + divid).data('mode') : 'openebench';
 
 	const api_url = $('#' + divid).data("api-url")
+	const bench_event_api_url = $('#' + divid).data("bench-event-api-url") ? $('#' + divid).data("bench-event-api-url") : 'https://openebench.bsc.es/rest/bench_event_api'
 
 	var path_data = $('#' + divid).data('benchmarkingevent') + '/' + selected_classifier;
-	path_data = urljoin('https://openebench.bsc.es/rest/bench_event_api/', path_data);
+	path_data = urljoin(bench_event_api_url, path_data);
 	let http_method;
 
 	if (challenge_list.length === undefined || challenge_list.length == 0) {
