@@ -1,6 +1,6 @@
 {
   "name": "@inb/oeb-classification-table",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Repository that contains the table used in OpenEBench for the classification of benchmarking results",
   "main": "build/build.js",
   "scripts": {

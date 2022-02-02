@@ -46,7 +46,7 @@ function fill_in_table(divid, challenges, mode, tool_elixir_ids, community_id) {
 		var th = document.createElement('th');
 		if (tool_elixir_ids[toolname] != null) {
 			var technical_url = urljoin('https://' + mode + '.bsc.es/tool/', tool_elixir_ids[toolname]);
-			th.innerHTML = "<a href='" + technical_url + "'>" + toolname + '</a>';
+			th.innerHTML = "<a href='" + technical_url + "' target='_blank'>" + toolname + '</a>';
 		} else {
 			th.innerHTML = '<a>' + toolname + '</a>';
 		}
@@ -67,7 +67,7 @@ function fill_in_table(divid, challenges, mode, tool_elixir_ids, community_id) {
 			if (i == 0) {
 				var url = urljoin('https://' + mode + '.bsc.es/scientific/', community_id, challenges[num]._id);
 				var th = document.createElement('th');
-				th.innerHTML = "<a href='" + url + "'>" + column_value_dict['challengeName'] + '</a>';
+				th.innerHTML = "<a href='" + url + "' target='_blank'>" + column_value_dict['challengeName'] + '</a>';
 				th.id = column_value_dict['challengeName'];
 				thead.rows[i].appendChild(th);
 			} else {
