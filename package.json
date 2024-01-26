@@ -9,7 +9,7 @@
     "dev": "webpack-cli src/app.js --output=build/build.js -d -w;",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Javier Garrayo <javier.garrayo@bsc.es>, Vicky Sundesha <vicky.sundesha@bsc.es>",
+  "author": "Javier Garrayo <javier.garrayo@bsc.es>, Vicky Sundesha <vicky.sundesha@bsc.es>, Dominik Brüchner <dominik.bruchner@bsc.es>, José Mª Fernández <jose.m.fernandez@bsc.es>",
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^1.0.1",
