@@ -3,6 +3,20 @@ import './app.css';
 import urljoin from 'url-join';
 import { createApolloFetch } from 'apollo-fetch';
 
+let quartile_name_map = {
+	1: 'Q1', 
+	2: 'Q2', 
+	3: 'Q3', 
+	4: 'Q4'
+};
+
+let quartile_css_map = {
+	1: 'Q1', 
+	2: 'Q2', 
+	3: 'Q3', 
+	4: 'Q4'
+};
+
 function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id) {
 	// every time a new classification is compute the previous results table is deleted (if it exists)
 	remove_table(divid)
@@ -38,13 +52,6 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id)
 	aggregations_row.appendChild(th);
 
 	// append rows with all participants in the benchmark
-
-	let quartile_name_map = {
-		1: 'Q1', 
-		2: 'Q2', 
-		3: 'Q3', 
-		4: 'Q4'
-	};
 
 	let known_tools = {};
 	let ordered_tools = [];
@@ -143,33 +150,11 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id)
 				let cell = tbody.rows[i].insertCell();
 				let cellval = '-';
 				if(row_tool_name in column_value_dict) {
-					cellval = quartile_name_map[column_value_dict[row_tool_name]]
+					cellval = quartile_name_map[column_value_dict[row_tool_name]];
+					cell.setAttribute("class", quartile_css_map[column_value_dict[row_tool_name]]);
 				}
 				cell.appendChild(document.createTextNode(cellval));
 			});
-		}
-	});
-}
-
-function set_cell_colors() {
-	var cell = $('td');
-
-	cell.each(function() {
-		//loop through all td elements ie the cells
-
-		var cell_value = $(this).html(); //get the value
-
-		if (cell_value == 'Q1') {
-			//if then for if value is 1
-			$(this).css({ background: '#238b45', color: '#ffffff' });
-		} else if (cell_value == 'Q2') {
-			$(this).css({ background: '#74c575' });
-		} else if (cell_value == 'Q3') {
-			$(this).css({ background: '#bbe4b3' });
-		} else if (cell_value == 'Q4') {
-			$(this).css({ background: '#edf8e9' });
-		} else {
-			$(this).css({ background: '#ffffff' });
 		}
 	});
 }
@@ -263,7 +248,6 @@ function compute_classification(divid, selected_classifier, challenge_list) {
 					});
 
 					fill_in_table(divid, results, mode, tool_elixir_ids, community_id);
-					set_cell_colors();
 					show_loading_spinner(divid, false);
 				});
 			}

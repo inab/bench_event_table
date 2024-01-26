@@ -81,6 +81,28 @@
   margin: auto;
 }
 
+.Q1 {
+  background-color: #238b45;
+  color: #ffffff;
+}
+
+.Q2 {
+  background-color: #74c575;
+}
+
+.Q3 {
+  background-color: #bbe4b3;
+}
+
+.Q4 {
+  background-color: #edf8e9;
+}
+
+.Q2 , .Q3 , .Q4 {
+  color: #000000;
+}
+
+
 #loading {
   display: inline-block;
   width: 50px;
