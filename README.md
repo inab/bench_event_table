@@ -59,26 +59,65 @@ Requirements:
 
 Clone the repo to your document root :
 
-```
+```bash
 git clone https://github.com/inab/bench_event_table.git
 ```
 
 Install dependencies from package.json :
 
-```
-npm install 
+```bash
+npm ci
 ```
 
 Export node moodules :
 
-```
-export PATH="${PWD}/node_modules/.bin/:$PATH"
+```bash
+export PATH="$(npm root)/.bin/:$PATH"
 ```
 
-Compile with webpack and visualize sample results in your localhost :
+Compile with webpack and visualize sample results in your localhost (add `-w` for continuous rebuilds):
+
+```bash
+webpack-cli src/app.js --output=build/build.js -d
+```
+
+If you get an error similar to this due you are using a version of Node newer than v16 (where a security hole was fixed)
 
 ```
-./node_modules/.bin/webpack-cli src/app.js --output=build/build.js -d -w
+webpack is watching the files…
+
+node:internal/crypto/hash:69
+  this[kHandle] = new _Hash(algorithm, xofLen);
+                  ^
+
+Error: error:0308010C:digital envelope routines::unsupported
+    at new Hash (node:internal/crypto/hash:69:19)
+    at Object.createHash (node:crypto:138:10)
+    at module.exports (/home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/webpack/lib/util/createHash.js:90:53)
+    at NormalModule._initBuildHash (/home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/webpack/lib/NormalModule.js:402:16)
+    at handleParseError (/home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/webpack/lib/NormalModule.js:450:10)
+    at /home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/webpack/lib/NormalModule.js:482:5
+    at /home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/webpack/lib/NormalModule.js:343:12
+    at /home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/loader-runner/lib/LoaderRunner.js:373:3
+    at iterateNormalLoaders (/home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/loader-runner/lib/LoaderRunner.js:214:10)
+    at Array.<anonymous> (/home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/loader-runner/lib/LoaderRunner.js:205:4)
+    at Storage.finished (/home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/enhanced-resolve/lib/CachedInputFileSystem.js:55:16)
+    at /home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/enhanced-resolve/lib/CachedInputFileSystem.js:91:9
+    at /home/jmfernandez/projects/OpenEBench/bench_event_table/node_modules/graceful-fs/graceful-fs.js:90:16
+    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3) {
+  opensslErrorStack: [ 'error:03000086:digital envelope routines::initialization error' ],
+  library: 'digital envelope routines',
+  reason: 'unsupported',
+  code: 'ERR_OSSL_EVP_UNSUPPORTED'
+}
+
+Node.js v20.6.1
+```
+
+then try next line to one shot compilation
+
+```bash
+NODE_OPTIONS=--openssl-legacy-provider webpack-cli src/app.js --output=build/build.js -d
 ```
 
 Add the build file which you can download from build/build.js and tag it into your html. You can then call the `run_summary_table()` function.  
