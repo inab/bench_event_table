@@ -68,6 +68,19 @@
   background-color: #b3cde0;
 } 
 
+.notbold {
+  font-weight: normal;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.aggregation_cell {
+  max-width: 20ch;
+  margin: auto;
+}
+
 #loading {
   display: inline-block;
   width: 50px;

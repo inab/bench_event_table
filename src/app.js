@@ -3,81 +3,152 @@ import './app.css';
 import urljoin from 'url-join';
 import { createApolloFetch } from 'apollo-fetch';
 
-function fill_in_table(divid, challenges, mode, tool_elixir_ids, community_id) {
+function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id) {
 	// every time a new classification is compute the previous results table is deleted (if it exists)
 	remove_table(divid)
 
-	var scrollableDiv = document.createElement('div');
+	let scrollableDiv = document.createElement('div');
 	scrollableDiv.id = divid + 'oeb-table-scroll';
 	scrollableDiv.className = 'oeb-table-scroll';
 
 	//create table dinamically
-	var table = document.createElement('table');
+	let table = document.createElement('table');
 	table.id = divid + '-oeb-main-table';
 	table.className = 'oeb-main-table';
 
-	var divTable = document.getElementById(divid);
+	let divTable = document.getElementById(divid);
 
 	scrollableDiv.appendChild(table);
 	divTable.appendChild(scrollableDiv);
 
-	var thead = document.createElement('thead');
-	var tbody = document.createElement('tbody');
+	let thead = document.createElement('thead');
+	let tbody = document.createElement('tbody');
 	table.appendChild(thead);
 	table.appendChild(tbody);
 
 	//add challenge and tool fixed top left
-	var row = thead.insertRow(-1);
-	var th = document.createElement('th');
-	th.innerHTML = '<b>CHALLENGE &#8594  <br> TOOL &#8595</b>';
-	row.appendChild(th);
+	let challenges_row = thead.insertRow();
+	let ch_th = document.createElement('th');
+	ch_th.innerHTML = '<b>Challenges &#8594';
+	challenges_row.appendChild(ch_th);
+
+	let aggregations_row = thead.insertRow();
+	let th = document.createElement('th');
+	th.innerHTML = '<b>Aggregation &#8594  <br>Participant &#8595</b>';
+	aggregations_row.appendChild(th);
 
 	// append rows with all participants in the benchmark
 
-	var quartile_name_map = {
+	let quartile_name_map = {
 		1: 'Q1', 
 		2: 'Q2', 
 		3: 'Q3', 
 		4: 'Q4'
 	};
 
-	Object.keys(challenges[0].participants).forEach(function(toolname, i) {
-		var row = tbody.insertRow(-1);
-		var th = document.createElement('th');
-		if (tool_elixir_ids[toolname] != null) {
-			var technical_url = urljoin('https://' + mode + '.bsc.es/tool/', tool_elixir_ids[toolname]);
-			th.innerHTML = "<a href='" + technical_url + "' target='_blank'>" + toolname + '</a>';
-		} else {
-			th.innerHTML = '<a>' + toolname + '</a>';
+	let known_tools = {};
+	let ordered_tools = [];
+	aggregations.forEach((aggregation, num) => {
+		if("participants" in aggregation) {
+			Object.keys(aggregation.participants).forEach((toolname, i) => {
+				if(!(toolname in known_tools)) {
+					known_tools[toolname] = true;
+					ordered_tools.push(toolname);
+					
+					let row = tbody.insertRow(-1);
+					let th = document.createElement('th');
+					let a = document.createElement("a");
+					if (tool_elixir_ids[toolname] != null) {
+						let technical_url = urljoin('https://' + mode + '.bsc.es/tool/', tool_elixir_ids[toolname]);
+						a.setAttribute("href", technical_url);
+						a.setAttribute("target", "_blank");
+					}
+					a.appendChild(document.createTextNode(toolname));
+					th.appendChild(a);
+					th.dataset.toolname = toolname;
+					row.appendChild(th);
+				}
+			});
 		}
-		th.dataset.toolname = toolname;
-		row.appendChild(th);
 	});
+	
+	
+	// It has to be done in two passes because the number of rows have to be "known" beforehand
+	let drawn_challenge_headers = {};
+	aggregations.forEach((aggregation, num) => {
+		if("participants" in aggregation) {
+			// append columns with aggregations and results
+			let column_value_dict = {};
+			Object.keys(aggregation.participants).forEach((toolname, j) => {
+				column_value_dict[toolname] = aggregation.participants[toolname];
+			});
 
-	// append columns with challenges and results
-	for (var num = 0; num < challenges.length; num++) {
-		var column_value_dict = {challengeName: challenges[num].acronym};
-		Object.keys(challenges[num].participants).forEach(function(toolname, j) {
-			column_value_dict[toolname] = challenges[num].participants[toolname];
-		});
-		// open loop for each row and append cell
-
-		//first row with headers
-		for (var i = 0; i < table.rows.length; i++) {
-			if (i == 0) {
-				var url = urljoin('https://' + mode + '.bsc.es/scientific/', community_id, challenges[num]._id);
-				var th = document.createElement('th');
-				th.innerHTML = "<a href='" + url + "' target='_blank'>" + column_value_dict['challengeName'] + '</a>';
-				th.id = column_value_dict['challengeName'];
-				thead.rows[i].appendChild(th);
+			// Challenge specific cell
+			let url = urljoin('https://' + mode + '.bsc.es/scientific/', community_id, aggregation._id);
+			let the_colspan = 1;
+			let ch_th = null;
+			if(aggregation._id in drawn_challenge_headers) {
+				// Increase the colspan
+				ch_th = drawn_challenge_headers[aggregation._id];
+				let colspanstr = ch_th.getAttribute("colspan");
+				the_colspan = parseInt(colspanstr);
+				the_colspan++;
 			} else {
-				//non headers
-				var cell = tbody.rows[i - 1].insertCell(table.rows[i].cells.length);
-				const row_tool_name = table.rows[i].cells[0].dataset.toolname;
-				cell.innerHTML = quartile_name_map[column_value_dict[row_tool_name]];
+				ch_th = document.createElement('th');
+				let aggdivcell = document.createElement("div");
+				aggdivcell.setAttribute("class", "aggregation_cell");
+
+				let a = document.createElement("a");
+				a.setAttribute("href", url);
+				a.setAttribute("target", "blank");
+				let acronym = "challenge_acronym" in aggregation ? aggregation.challenge_acronym : aggregation.acronym;
+				a.appendChild(document.createTextNode(acronym));
+				aggdivcell.appendChild(a);
+				ch_th.appendChild(aggdivcell);
+				ch_th.id = aggregation._id;
+				challenges_row.appendChild(ch_th);
+				drawn_challenge_headers[aggregation._id] = ch_th;
 			}
+			ch_th.setAttribute("colspan", the_colspan.toString());
+
+			// Aggregation specific cell
+			let th = document.createElement('th');
+			let divcell = document.createElement("div");
+			divcell.setAttribute("class", "aggregation_cell");
+			let a = document.createElement("a");
+			//a.setAttribute("href", url);
+			//a.setAttribute("target", "blank");
+			aggregation.metrics.forEach((m_entry, m_entry_i) => {
+				if(m_entry_i > 0) {
+					a.appendChild(document.createElement('br'));
+					let span = document.createElement("span");
+					span.setAttribute("class", "notbold italic");
+					span.appendChild(document.createTextNode('vs'));
+					a.appendChild(span);
+					a.appendChild(document.createElement('br'));
+				}
+				if(m_entry == null) {
+					console.log(aggregation);
+				}
+				a.appendChild(document.createTextNode(m_entry.title));
+			});
+			divcell.appendChild(a);
+			th.appendChild(divcell);
+			th.id = aggregation.aggregation_id;
+			aggregations_row.appendChild(th);
+
+			// open loop for each row and append cell
+			ordered_tools.forEach((row_tool_name, i) => {
+				//non headers
+				let cell = tbody.rows[i].insertCell();
+				let cellval = '-';
+				if(row_tool_name in column_value_dict) {
+					cellval = quartile_name_map[column_value_dict[row_tool_name]]
+				}
+				cell.appendChild(document.createTextNode(cellval));
+			});
 		}
-	}
+	});
 }
 
 function set_cell_colors() {
