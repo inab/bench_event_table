@@ -98,8 +98,15 @@
   background-color: #edf8e9;
 }
 
+/*
 .Q2 , .Q3 , .Q4 {
   color: #000000;
+}
+*/
+
+/* Disable strange header coloring */
+.aggregation_cell a {
+  color: revert;
 }
 
 

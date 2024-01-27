@@ -1,10 +1,10 @@
 {
   "name": "@inb/oeb-classification-table",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Repository that contains the table used in OpenEBench for the classification of benchmarking results",
   "main": "build/build.js",
   "scripts": {
-    "build": "npm install",
+    "build": "npm ci",
     "prod": "webpack-cli src/app.js --output=build/build.js -p;",
     "dev": "webpack-cli src/app.js --output=build/build.js -d -w;",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,11 +12,13 @@
   "author": "Javier Garrayo <javier.garrayo@bsc.es>, Vicky Sundesha <vicky.sundesha@bsc.es>, Dominik Brüchner <dominik.bruchner@bsc.es>, José Mª Fernández <jose.m.fernandez@bsc.es>",
   "license": "ISC",
   "devDependencies": {
+    "apollo-fetch": "^0.7.0",
     "css-loader": "^1.0.1",
     "jquery": "^3.4.1",
-    "apollo-fetch": "^0.7.0",
+    "jquery-ui": "^1.13.2",
     "style-loader": "^0.21.0",
     "url-join": "^4.0.0",
+    "url-loader": "^4.1.1",
     "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2"
   },

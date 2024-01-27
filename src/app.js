@@ -1,4 +1,9 @@
 import $ from 'jquery';
+import 'jquery-ui/themes/base/core.css';
+import 'jquery-ui/themes/base/theme.css';
+import 'jquery-ui/themes/base/tabs.css';
+import 'jquery-ui/ui/core';
+import 'jquery-ui/ui/widgets/tabs';
 import './app.css';
 import urljoin from 'url-join';
 import { createApolloFetch } from 'apollo-fetch';
@@ -17,41 +22,9 @@ let quartile_css_map = {
 	4: 'Q4'
 };
 
-function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id) {
+function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id, chunk_size) {
 	// every time a new classification is compute the previous results table is deleted (if it exists)
-	remove_table(divid)
-
-	let scrollableDiv = document.createElement('div');
-	scrollableDiv.id = divid + 'oeb-table-scroll';
-	scrollableDiv.className = 'oeb-table-scroll';
-
-	//create table dinamically
-	let table = document.createElement('table');
-	table.id = divid + '-oeb-main-table';
-	table.className = 'oeb-main-table';
-
-	let divTable = document.getElementById(divid);
-
-	scrollableDiv.appendChild(table);
-	divTable.appendChild(scrollableDiv);
-
-	let thead = document.createElement('thead');
-	let tbody = document.createElement('tbody');
-	table.appendChild(thead);
-	table.appendChild(tbody);
-
-	//add challenge and tool fixed top left
-	let challenges_row = thead.insertRow();
-	let ch_th = document.createElement('th');
-	ch_th.innerHTML = '<b>Challenges &#8594';
-	challenges_row.appendChild(ch_th);
-
-	let aggregations_row = thead.insertRow();
-	let th = document.createElement('th');
-	th.innerHTML = '<b>Aggregation &#8594  <br>Participant &#8595</b>';
-	aggregations_row.appendChild(th);
-
-	// append rows with all participants in the benchmark
+	remove_table(divid);
 
 	let known_tools = {};
 	let ordered_tools = [];
@@ -61,24 +34,87 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id)
 				if(!(toolname in known_tools)) {
 					known_tools[toolname] = true;
 					ordered_tools.push(toolname);
-					
-					let row = tbody.insertRow(-1);
-					let th = document.createElement('th');
-					let a = document.createElement("a");
-					if (tool_elixir_ids[toolname] != null) {
-						let technical_url = urljoin('https://' + mode + '.bsc.es/tool/', tool_elixir_ids[toolname]);
-						a.setAttribute("href", technical_url);
-						a.setAttribute("target", "_blank");
-					}
-					a.appendChild(document.createTextNode(toolname));
-					th.appendChild(a);
-					th.dataset.toolname = toolname;
-					row.appendChild(th);
 				}
 			});
 		}
 	});
+
+	let slicesdiv = document.createElement('div');
+	let slicesdiv_id = divid + '_oeb-table-scroll'
+	slicesdiv.id = slicesdiv_id;
+	let parentDivTable = document.getElementById(divid);
+	parentDivTable.appendChild(slicesdiv);
 	
+	let tablist = document.createElement("ul");
+	slicesdiv.appendChild(tablist);
+
+	let aggregations_slice = aggregations;
+	for(let shift_slice=0; shift_slice < aggregations.length; shift_slice += chunk_size) {
+		let aggregations_slice = aggregations.slice(shift_slice, shift_slice+chunk_size);
+		
+		let tabheader = document.createElement("li");
+		let tab_a = document.createElement("a");
+		let shift_slice_id = slicesdiv_id + "-" + shift_slice;
+		tab_a.href = "#" + shift_slice_id;
+		tab_a.appendChild(document.createTextNode("Aggregations " + (shift_slice + 1).toString() + " to " + (shift_slice + aggregations_slice.length).toString() + " (total " + aggregations.length + ")"));
+		
+		tabheader.appendChild(tab_a);
+		tablist.appendChild(tabheader);
+
+		let scrollableDiv = fill_in_table_slice(aggregations_slice, mode, tool_elixir_ids, community_id, ordered_tools);
+		scrollableDiv.id = shift_slice_id;
+		slicesdiv.appendChild(scrollableDiv);
+	}
+	$(slicesdiv).tabs();
+}
+
+function fill_in_table_slice(aggregations, mode, tool_elixir_ids, community_id, ordered_tools) {
+	let scrollableDiv = document.createElement('div');
+	scrollableDiv.className = 'oeb-table-scroll';
+
+	//create table dinamically
+	let table = document.createElement('table');
+	table.className = 'oeb-main-table';
+
+
+	scrollableDiv.appendChild(table);
+
+	let thead = document.createElement('thead');
+	let tbody = document.createElement('tbody');
+	table.appendChild(thead);
+	table.appendChild(tbody);
+
+	//add challenge and tool fixed top left
+	let challenges_row = thead.insertRow();
+	let ch_th = document.createElement('th');
+	ch_th.innerHTML = '<b>Challenges &#8594</b>';
+	challenges_row.appendChild(ch_th);
+
+	let aggregations_row = thead.insertRow();
+	let th = document.createElement('th');
+	th.innerHTML = '<b>Aggregation &#8594  <br>Participant &#8595</b>';
+	aggregations_row.appendChild(th);
+
+	// append rows with all participants in the benchmark
+
+	ordered_tools.forEach((toolname) => {
+		let row = tbody.insertRow(-1);
+		let th = document.createElement('th');
+		let divpart = document.createElement('div');
+		divpart.setAttribute("class", "aggregation_cell");
+		th.appendChild(divpart);
+		
+		let a = document.createElement("a");
+		if (tool_elixir_ids[toolname] != null) {
+			let technical_url = urljoin('https://' + mode + '.bsc.es/tool/', tool_elixir_ids[toolname]);
+			a.setAttribute("href", technical_url);
+			a.setAttribute("target", "_blank");
+		}
+		a.appendChild(document.createTextNode(toolname));
+		divpart.appendChild(a);
+		th.dataset.toolname = toolname;
+		row.appendChild(th);
+	});	
 	
 	// It has to be done in two passes because the number of rows have to be "known" beforehand
 	let drawn_challenge_headers = {};
@@ -157,6 +193,8 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id)
 			});
 		}
 	});
+	
+	return scrollableDiv;
 }
 
 async function fetchUrl(url, http_method, challenge_list) {
@@ -176,7 +214,7 @@ async function fetchUrl(url, http_method, challenge_list) {
 	}
 }
 
-function compute_classification(divid, selected_classifier, challenge_list) {
+function compute_classification(divid, selected_classifier, challenge_list, chunk_size) {
 	show_loading_spinner(divid, true);
 
 	//check for mode by default it is production if no param is given
@@ -247,7 +285,7 @@ function compute_classification(divid, selected_classifier, challenge_list) {
 						}
 					});
 
-					fill_in_table(divid, results, mode, tool_elixir_ids, community_id);
+					fill_in_table(divid, results, mode, tool_elixir_ids, community_id, chunk_size);
 					show_loading_spinner(divid, false);
 				});
 			}
@@ -255,26 +293,26 @@ function compute_classification(divid, selected_classifier, challenge_list) {
 		.catch(err => console.log(err));
 }
 
-function load_table(divid, challenge_list = [], classifier = 'diagonal') {
-	var element = document.getElementById(divid + '_bench_dropdown_list');
+function load_table(divid, challenge_list = [], classifier = 'diagonal', chunk_size = 10) {
+	let element = document.getElementById(divid + '_bench_dropdown_list');
 	if (element == null) {
 		//add dropdown list
-		var list = document.createElement('select');
+		let list = document.createElement('select');
 		list.id = divid + '_bench_dropdown_list';
 		list.className = 'classificator_list';
-		var bench_table = document.getElementById(divid);
+		let bench_table = document.getElementById(divid);
 
-		var list_label = document.createElement('label');
+		let list_label = document.createElement('label');
 		list_label.htmlFor = divid + '_bench_dropdown_list';
 		list_label.innerText = 'Classification Method:';
 
 		// add option group
-		var group = document.createElement('OptGroup');
+		let group = document.createElement('OptGroup');
 		group.label = 'Select a classification method:';
 		list.add(group);
 
 		// add list options
-		var option1 = document.createElement('option');
+		let option1 = document.createElement('option');
 		option1.class = 'selection_option';
 		option1.id = divid + '_classificator__squares';
 		option1.title = 'Apply square quartiles classification method (based on the 0.5 quartile of the X and Y metrics)';
@@ -283,7 +321,7 @@ function load_table(divid, challenge_list = [], classifier = 'diagonal') {
 		option1.value = 'squares';
 		option1.innerHTML = 'SQUARE QUARTILES';
 
-		var option2 = document.createElement('option');
+		let option2 = document.createElement('option');
 		option2.class = 'selection_option';
 		option2.id = divid + '_classificator__diagonals';
 		option2.title =
@@ -293,7 +331,7 @@ function load_table(divid, challenge_list = [], classifier = 'diagonal') {
 		option2.value = 'diagonals';
 		option2.innerHTML = 'DIAGONAL QUARTILES';
 
-		var option3 = document.createElement('option');
+		let option3 = document.createElement('option');
 		option3.class = 'selection_option';
 		option3.id = divid + 'classificator__clusters';
 		option3.title = 'Apply k-means clustering algorithm to group the participants';
@@ -306,7 +344,7 @@ function load_table(divid, challenge_list = [], classifier = 'diagonal') {
 		group.appendChild(option2);
 		group.appendChild(option3);
 
-		var selected_classifier = classifier;
+		let selected_classifier = classifier;
 
 		if (selected_classifier) {
 			switch (selected_classifier) {
@@ -329,13 +367,15 @@ function load_table(divid, challenge_list = [], classifier = 'diagonal') {
 		bench_table.appendChild(list);
 	}
 
-	var list = document.getElementById(divid + '_bench_dropdown_list');
+	let droplist = document.getElementById(divid + '_bench_dropdown_list');
 	$('#' + divid + '_bench_dropdown_list').off();
-	$(list).on('change', function() {
-		compute_classification(divid, this.options[this.selectedIndex].id.split('__')[1], challenge_list);
+	$(droplist).on('change', function() {
+		//compute_classification(divid, this.options[this.selectedIndex].id.split('__')[1], challenge_list, chunk_size);
+		compute_classification(divid, this.options[this.selectedIndex].value, challenge_list, chunk_size);
 	});
 
-	compute_classification(divid, list.options[list.selectedIndex].id.split('__')[1], challenge_list);
+	//compute_classification(divid, droplist.options[droplist.selectedIndex].id.split('__')[1], challenge_list, chunk_size);
+	compute_classification(divid, droplist.options[droplist.selectedIndex].value, challenge_list, chunk_size);
 }
 
 function run_summary_table(challenge_list = [], active_table = null) {
@@ -365,9 +405,9 @@ function run_summary_table(challenge_list = [], active_table = null) {
 }
 
 function remove_table(divid){
-	if (document.getElementById(divid + '-oeb-main-table') != null) {
-		document.getElementById(divid + '-oeb-main-table').remove();
-		document.getElementById(divid + 'oeb-table-scroll').remove();
+	let the_div = document.getElementById(divid + '_oeb-table-scroll');
+	if (the_div != null) {
+		the_div.remove();
 	}
 }
 
