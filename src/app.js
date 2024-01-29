@@ -28,6 +28,9 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id,
 
 	let known_tools = {};
 	let ordered_tools = [];
+	// Group by challenge
+	let challenges = {};
+	let challenges_list = [];
 	aggregations.forEach((aggregation, num) => {
 		if("participants" in aggregation) {
 			Object.keys(aggregation.participants).forEach((toolname, i) => {
@@ -36,8 +39,31 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id,
 					ordered_tools.push(toolname);
 				}
 			});
+			if(!(aggregation._id in challenges)) {
+				challenges[aggregation._id] = [];
+				challenges_list.push(challenges[aggregation._id]);
+			}
+			challenges[aggregation._id].push(aggregation);
 		}
 	});
+	
+	let aggregation_slices = challenges_list.reduce((aggregation_slices, aggregations) => {
+		let lastidx = aggregation_slices.length - 1;
+		if(lastidx == -1 || (aggregation_slices[lastidx].members.length + aggregations.length) >= chunk_size) {
+			let aggregation_tab = {
+				from: aggregations[0].challenge_acronym,
+				to: aggregations[0].challenge_acronym,
+				members: [...aggregations],	
+			};
+			aggregation_slices.push(aggregation_tab);
+		} else {
+			let aggregation_tab = aggregation_slices[lastidx];
+			aggregation_tab.members.push(...aggregations);
+			aggregation_tab.to = aggregations[0].challenge_acronym;
+		}
+		
+		return aggregation_slices;
+	}, []);
 
 	let slicesdiv = document.createElement('div');
 	let slicesdiv_id = divid + '_oeb-table-scroll'
@@ -48,23 +74,37 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id,
 	let tablist = document.createElement("ul");
 	slicesdiv.appendChild(tablist);
 
-	let aggregations_slice = aggregations;
-	for(let shift_slice=0; shift_slice < aggregations.length; shift_slice += chunk_size) {
-		let aggregations_slice = aggregations.slice(shift_slice, shift_slice+chunk_size);
-		
+	aggregation_slices.forEach((aggregations_slice, slice_i) => {
 		let tabheader = document.createElement("li");
 		let tab_a = document.createElement("a");
-		let shift_slice_id = slicesdiv_id + "-" + shift_slice;
+		let shift_slice_id = slicesdiv_id + "-" + slice_i;
 		tab_a.href = "#" + shift_slice_id;
-		tab_a.appendChild(document.createTextNode("Aggregations " + (shift_slice + 1).toString() + " to " + (shift_slice + aggregations_slice.length).toString() + " (total " + aggregations.length + ")"));
+		
+		let span_from = document.createElement("span");
+		span_from.appendChild(document.createTextNode(aggregations_slice.from));
+		span_from.setAttribute("class", "tablimits");
+		tab_a.appendChild(span_from);
+		let tabtext;
+		let tabtextnode;
+		if(aggregations_slice.from === aggregations_slice.to) {
+			tabtext = aggregations_slice.from;
+		} else {
+			tabtext = aggregations_slice.from + " to " + aggregations_slice.to;
+			
+			let span_to = document.createElement("span");
+			span_to.appendChild(document.createTextNode("\u00A0to " + aggregations_slice.to));
+			span_to.setAttribute("class", "tablimits");
+			tab_a.appendChild(span_to);
+		}
+		tab_a.setAttribute("title", tabtext);
 		
 		tabheader.appendChild(tab_a);
 		tablist.appendChild(tabheader);
 
-		let scrollableDiv = fill_in_table_slice(aggregations_slice, mode, tool_elixir_ids, community_id, ordered_tools);
+		let scrollableDiv = fill_in_table_slice(aggregations_slice.members, mode, tool_elixir_ids, community_id, ordered_tools);
 		scrollableDiv.id = shift_slice_id;
 		slicesdiv.appendChild(scrollableDiv);
-	}
+	});
 	$(slicesdiv).tabs();
 }
 
@@ -87,12 +127,12 @@ function fill_in_table_slice(aggregations, mode, tool_elixir_ids, community_id, 
 	//add challenge and tool fixed top left
 	let challenges_row = thead.insertRow();
 	let ch_th = document.createElement('th');
-	ch_th.innerHTML = '<b>Challenges &#8594</b>';
+	ch_th.innerHTML = '<b>Challenges&nbsp;&#8594</b>';
 	challenges_row.appendChild(ch_th);
 
 	let aggregations_row = thead.insertRow();
 	let th = document.createElement('th');
-	th.innerHTML = '<b>Aggregation &#8594  <br>Participant &#8595</b>';
+	th.innerHTML = '<b>Charts&nbsp;&#8594  <br>Participants&nbsp;&#8595</b>';
 	aggregations_row.appendChild(th);
 
 	// append rows with all participants in the benchmark
@@ -111,6 +151,7 @@ function fill_in_table_slice(aggregations, mode, tool_elixir_ids, community_id, 
 			a.setAttribute("target", "_blank");
 		}
 		a.appendChild(document.createTextNode(toolname));
+		a.setAttribute("title", toolname);
 		divpart.appendChild(a);
 		th.dataset.toolname = toolname;
 		row.appendChild(th);
@@ -146,6 +187,7 @@ function fill_in_table_slice(aggregations, mode, tool_elixir_ids, community_id, 
 				a.setAttribute("target", "blank");
 				let acronym = "challenge_acronym" in aggregation ? aggregation.challenge_acronym : aggregation.acronym;
 				a.appendChild(document.createTextNode(acronym));
+				a.setAttribute("title", acronym);
 				aggdivcell.appendChild(a);
 				ch_th.appendChild(aggdivcell);
 				ch_th.id = aggregation._id;
@@ -170,10 +212,15 @@ function fill_in_table_slice(aggregations, mode, tool_elixir_ids, community_id, 
 					a.appendChild(span);
 					a.appendChild(document.createElement('br'));
 				}
+				let content;
 				if(m_entry == null) {
-					console.log(aggregation);
+					console.log("FIXME: metrics label not in challenge", aggregation);
+					content = document.createElement("i");
+					content.appendChild(document.createTextNode("undefined"));
+				} else {
+					content = document.createTextNode(m_entry.title);
 				}
-				a.appendChild(document.createTextNode(m_entry.title));
+				a.appendChild(content);
 			});
 			divcell.appendChild(a);
 			th.appendChild(divcell);

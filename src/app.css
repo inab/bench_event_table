@@ -1,6 +1,6 @@
 .oeb-table-scroll {
   position: relative;
-  width:100%;
+  /* width:100%; */
   z-index: 1;
   margin: auto;
   overflow: scroll;
@@ -77,8 +77,18 @@
 }
 
 .aggregation_cell {
-  max-width: 20ch;
   margin: auto;
+  max-width: 20ch;
+}
+
+.aggregation_cell , .tablimits {
+  max-width: 20ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tablimits {
+  display: inline-block;
 }
 
 .Q1 {
