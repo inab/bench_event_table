@@ -31,6 +31,7 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id,
 	// Group by challenge
 	let challenges = {};
 	let challenges_list = [];
+	let num_charts = 0;
 	aggregations.forEach((aggregation, num) => {
 		if("participants" in aggregation) {
 			Object.keys(aggregation.participants).forEach((toolname, i) => {
@@ -44,6 +45,7 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id,
 				challenges_list.push(challenges[aggregation._id]);
 			}
 			challenges[aggregation._id].push(aggregation);
+			num_charts++;
 		}
 	});
 	
@@ -74,6 +76,17 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id,
 	let tablist = document.createElement("ul");
 	slicesdiv.appendChild(tablist);
 
+	// The report, disabled tab
+	let challenge_report = document.createElement("li");
+	let rep_a = document.createElement("a");
+	rep_a.href = "#" + slicesdiv_id + "-summary";
+	let rep_b = document.createElement("b");
+	rep_b.appendChild(document.createTextNode(challenges_list.length.toString() + " Challenges, " + num_charts.toString() + " charts"))
+	rep_a.appendChild(rep_b);
+	challenge_report.appendChild(rep_a);
+	tablist.appendChild(challenge_report);
+
+	// Now, each slice
 	aggregation_slices.forEach((aggregations_slice, slice_i) => {
 		let tabheader = document.createElement("li");
 		let tab_a = document.createElement("a");
@@ -105,7 +118,8 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id,
 		scrollableDiv.id = shift_slice_id;
 		slicesdiv.appendChild(scrollableDiv);
 	});
-	$(slicesdiv).tabs();
+	// This one disables the first tab, which is used to give a summary
+	$(slicesdiv).tabs({ disabled: [0], active: 1 });
 }
 
 function fill_in_table_slice(aggregations, mode, tool_elixir_ids, community_id, ordered_tools) {
