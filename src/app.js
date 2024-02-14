@@ -22,7 +22,7 @@ let quartile_css_map = {
 	4: 'Q4'
 };
 
-function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id, chunk_size) {
+function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id, chunk_size, api_url) {
 	// every time a new classification is compute the previous results table is deleted (if it exists)
 	remove_table(divid);
 
@@ -99,7 +99,7 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id,
 		tab_a.appendChild(span_from);
 		let tabtext;
 		let tabtextnode;
-		if(aggregations_slice.from === aggregations_slice.to) {
+		if(aggregations_slice.from == aggregations_slice.to) {
 			tabtext = aggregations_slice.from;
 		} else {
 			tabtext = aggregations_slice.from + " to " + aggregations_slice.to;
@@ -114,7 +114,7 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id,
 		tabheader.appendChild(tab_a);
 		tablist.appendChild(tabheader);
 
-		let scrollableDiv = fill_in_table_slice(aggregations_slice.members, mode, tool_elixir_ids, community_id, ordered_tools);
+		let scrollableDiv = fill_in_table_slice(aggregations_slice.members, mode, tool_elixir_ids, community_id, ordered_tools, api_url);
 		scrollableDiv.id = shift_slice_id;
 		slicesdiv.appendChild(scrollableDiv);
 	});
@@ -122,7 +122,7 @@ function fill_in_table(divid, aggregations, mode, tool_elixir_ids, community_id,
 	$(slicesdiv).tabs({ disabled: [0], active: 1 });
 }
 
-function fill_in_table_slice(aggregations, mode, tool_elixir_ids, community_id, ordered_tools) {
+function fill_in_table_slice(aggregations, mode, tool_elixir_ids, community_id, ordered_tools, api_url) {
 	let scrollableDiv = document.createElement('div');
 	scrollableDiv.className = 'oeb-table-scroll';
 
@@ -217,28 +217,35 @@ function fill_in_table_slice(aggregations, mode, tool_elixir_ids, community_id, 
 			let a = document.createElement("a");
 			//a.setAttribute("href", url);
 			//a.setAttribute("target", "blank");
-			aggregation.metrics.forEach((m_entry, m_entry_i) => {
-				if(m_entry_i > 0) {
-					a.appendChild(document.createElement('br'));
-					let span = document.createElement("span");
-					span.setAttribute("class", "notbold italic");
-					span.appendChild(document.createTextNode('vs'));
-					a.appendChild(span);
-					a.appendChild(document.createElement('br'));
-				}
-				let content;
-				if(m_entry == null) {
-					console.log("FIXME: metrics label not in challenge", aggregation);
-					content = document.createElement("i");
-					content.appendChild(document.createTextNode("undefined"));
-				} else {
-					content = document.createTextNode(m_entry.title);
-				}
+			if(aggregation.aggregation_id!==undefined) {
+				th.id = aggregation.aggregation_id;
+				aggregation.metrics.forEach((m_entry, m_entry_i) => {
+					if(m_entry_i > 0) {
+						a.appendChild(document.createElement('br'));
+						let span = document.createElement("span");
+						span.setAttribute("class", "notbold italic");
+						span.appendChild(document.createTextNode('vs'));
+						a.appendChild(span);
+						a.appendChild(document.createElement('br'));
+					}
+					let content;
+					if(m_entry == null) {
+						console.log("FIXME: metrics label not in challenge", aggregation);
+						content = document.createElement("i");
+						content.appendChild(document.createTextNode("undefined"));
+					} else {
+						content = document.createTextNode(m_entry.title);
+					}
+					a.appendChild(content);
+				});
+			} else {
+				let content = document.createTextNode("No chart based on " + aggregation.metrics_category_id);
 				a.appendChild(content);
-			});
+				a.setAttribute("target", "_blank");
+				a.setAttribute("href", urljoin(api_url, "../staged/Metrics/" + aggregation.metrics_category_id));
+			}
 			divcell.appendChild(a);
 			th.appendChild(divcell);
-			th.id = aggregation.aggregation_id;
 			aggregations_row.appendChild(th);
 
 			// open loop for each row and append cell
@@ -346,7 +353,7 @@ function compute_classification(divid, selected_classifier, challenge_list, chun
 						}
 					});
 
-					fill_in_table(divid, results, mode, tool_elixir_ids, community_id, chunk_size);
+					fill_in_table(divid, results, mode, tool_elixir_ids, community_id, chunk_size, api_url);
 					show_loading_spinner(divid, false);
 				});
 			}
