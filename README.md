@@ -78,7 +78,7 @@ export PATH="$(npm root)/.bin/:$PATH"
 Compile with webpack and visualize sample results in your localhost (add `-w` for continuous rebuilds):
 
 ```bash
-webpack-cli src/app.js --output=build/build.js -d
+webpack-cli -d
 ```
 
 If you get an error similar to this due you are using a version of Node newer than v16 (where a security hole was fixed)
@@ -117,9 +117,9 @@ Node.js v20.6.1
 then try next line to one shot compilation
 
 ```bash
-NODE_OPTIONS=--openssl-legacy-provider webpack-cli src/app.js --output=build/build.js -d
+NODE_OPTIONS=--openssl-legacy-provider webpack-cli -d
 ```
 
-Add the build file which you can download from build/build.js and tag it into your html. You can then call the `run_summary_table()` function.  
+Add the build file which you can download from `build/build.js` and tag it into your html. You can then call the `run_summary_table()` function.  
 
-The HTML file should look like [this](./index.html)
+The HTML file should look like [this](./index.html) or [this other](./index-LRGASP.html)
