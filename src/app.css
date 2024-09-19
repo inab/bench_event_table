@@ -17,7 +17,7 @@
 .oeb-table-scroll th,
 .oeb-table-scroll td {
   padding: 5px 10px;
-  border: 1px solid black;  
+  border: 1px solid black;
   vertical-align: top;
   text-align: center;
 }
@@ -30,9 +30,9 @@
 .oeb-table-scroll th {
   position: -webkit-sticky;
   position: sticky;
-  background: #fff;  
+  background: #fff;
   /* overflow: hidden; */
-  z-index:3;
+  z-index: 3;
 }
 /* .oeb-table-scroll th a{
  
@@ -43,11 +43,9 @@
   left: 0;
   z-index: 2;
 }
-.oeb-table-scroll thead th:first-child{
+.oeb-table-scroll thead th:first-child {
   z-index: 4;
-  
 }
-
 
 .no_benchmark_data {
   text-align: center;
@@ -55,9 +53,9 @@
 }
 
 .classificator_list {
-  background-color: #0A58A2;
+  background-color: #0a58a2;
   color: #fff;
-  cursor: pointer; 
+  cursor: pointer;
   padding-left: 25px;
   padding-right: 25px;
   margin-left: 5px;
@@ -66,7 +64,7 @@
 
 .classificator_list:hover {
   background-color: #b3cde0;
-} 
+}
 
 .notbold {
   font-weight: normal;
@@ -81,7 +79,8 @@
   max-width: 20ch;
 }
 
-.aggregation_cell , .tablimits {
+.aggregation_cell,
+.tablimits {
   max-width: 20ch;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -119,26 +118,26 @@
   color: revert;
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: 20px;
+  height: 100px;
+  text-align: center;
+}
 
+/* Styling for the loading spinner image */
 .spinner-loading {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  border: 3px solid rgba(0,0,0,.3); 
-  border-radius: 50%;
-  border-top-color: #000;
-  animation: spin 1s ease-in-out infinite;
-  -webkit-animation: spin 1s ease-in-out infinite;
+  width: 150px;
+  height: 100px;
 }
 
 .ui-tabs .ui-tabs-nav .empty-challenge {
-  background: rgb(255,191,191);
+  background: rgb(255, 191, 191);
 }
-  
 
-@keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
-}
-@-webkit-keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+.ui-widget.ui-widget-content{
+  margin-top: 20px
 }
