@@ -42,10 +42,10 @@ function fill_in_table(
 ) {
   let known_tools = {};
   let ordered_tools = [];
-  // Group by challenge
   let challenges = {};
   let challenges_list = [];
   let num_charts = 0;
+
   aggregations.forEach((aggregation, num) => {
     if ("participants" in aggregation) {
       Object.keys(aggregation.participants).forEach((toolname, i) => {
@@ -65,20 +65,11 @@ function fill_in_table(
     }
   });
 
-  // Let's sort by challenge acronym
   challenges_list.sort((a, b) => {
     const c_a = a[0].challenge_acronym.toUpperCase();
     const c_b = b[0].challenge_acronym.toUpperCase();
 
-    if (c_a < c_b) {
-      return -1;
-    }
-
-    if (c_a > c_b) {
-      return 1;
-    }
-
-    return 0;
+    return c_a < c_b ? -1 : c_a > c_b ? 1 : 0;
   });
 
   let empty_challenges_list = [];
@@ -127,21 +118,118 @@ function fill_in_table(
     aggregation_slices
   );
 
-  // every time a new classification is compute the previous results table is deleted (if it exists)
   let slicesdiv_id = remove_table(divid);
   let slicesdiv = document.createElement("div");
   slicesdiv.id = slicesdiv_id;
   let parentDivTable = document.getElementById(divid);
   parentDivTable.appendChild(slicesdiv);
 
+  let tabcontainer = document.createElement("div");
+  tabcontainer.setAttribute("class", "tabs-container");
+  slicesdiv.appendChild(tabcontainer);
+
+  let buttonleft = document.createElement("button");
+  buttonleft.setAttribute("class", "arrow left-arrow");
+  buttonleft.setAttribute("aria-label", "Previous tabs");
+  buttonleft.innerHTML = "&lt;";
+  tabcontainer.appendChild(buttonleft);
+
+  let tabwrap = document.createElement("div");
+  tabwrap.setAttribute("class", "tabs-wrapper");
+  tabcontainer.appendChild(tabwrap);
+
   let tablist = document.createElement("ul");
   tablist.setAttribute(
     "title",
     `Community ${community_id} event ${benchmarking_event_id}`
   );
-  slicesdiv.appendChild(tablist);
+  tabwrap.appendChild(tablist);
 
-  // The report, disabled tab
+  let buttonright = document.createElement("button");
+  buttonright.setAttribute("class", "arrow right-arrow");
+  buttonright.setAttribute("aria-label", "Next tabs");
+  buttonright.innerHTML = "&gt;";
+  tabcontainer.appendChild(buttonright);
+
+  let currentIndex = 0;
+  const maxVisibleTabs = 10;
+
+  function updateArrowButtons() {
+    buttonleft.disabled = currentIndex === 0;
+    buttonright.disabled =
+      currentIndex >= tablist.children.length - maxVisibleTabs;
+  }
+
+  function showVisibleTabs() {
+    let tabHeight = tablist.children[0].offsetHeight; // Get the height of the first tab
+    const totalTabs = tablist.children.length;
+
+    for (let i = 0; i < totalTabs; i++) {
+      if (i >= currentIndex && i < currentIndex + maxVisibleTabs) {
+        tablist.children[i].style.display = "inline-block";
+      } else {
+        tablist.children[i].style.display = "none";
+      }
+    }
+
+    // Update arrows visibility
+    if (totalTabs <= maxVisibleTabs) {
+      buttonleft.style.display = "none";
+      buttonright.style.display = "none";
+    } else {
+      buttonleft.style.display = "block";
+      buttonright.style.display = "block";
+    }
+
+    // Add empty tabs to maintain height if fewer tabs on the final page
+    let tabsToShow = Math.min(totalTabs - currentIndex, maxVisibleTabs);
+    let emptyTabs = maxVisibleTabs - tabsToShow;
+    while (emptyTabs > 0) {
+      let emptyTab = document.createElement("li");
+      emptyTab.className = "empty-tab";
+      emptyTab.style.height = `${tabHeight}px`; // Match the height of the visible tabs
+      tablist.appendChild(emptyTab);
+      emptyTabs--;
+    }
+  }
+
+  function scrollTabs(direction) {
+    if (direction === "right") {
+      currentIndex += maxVisibleTabs;
+    } else {
+      currentIndex -= maxVisibleTabs;
+    }
+
+    showVisibleTabs();
+    updateArrowButtons();
+    updatePaginator(); // Update paginator when tabs are scrolled
+  }
+
+  buttonright.addEventListener("click", () => {
+    scrollTabs("right");
+  });
+  buttonleft.addEventListener("click", () => {
+    scrollTabs("left");
+  });
+
+  // Create the paginator
+  let paginator = document.createElement("div");
+  paginator.setAttribute("class", "pags");
+  slicesdiv.appendChild(paginator);
+
+  function updatePaginator() {
+    const totalTabs = tablist.children.length;
+    const totalPages = Math.ceil(totalTabs / maxVisibleTabs);
+    const currentPage = Math.floor(currentIndex / maxVisibleTabs) + 1;
+
+    // Calculate the range of visible tabs
+    const startTab = currentIndex + 1; // Start index for visible tabs (1-based)
+    const endTab = Math.min(currentIndex + maxVisibleTabs, totalTabs); // End index for visible tabs (1-based)
+
+    paginator.innerHTML = `${startTab}-${endTab } tabs of ${totalTabs -1} Challenges, ${currentPage}/${totalPages} pages`; // Update paginator text
+  }
+
+
   let challenge_report = document.createElement("li");
   let rep_a = document.createElement("a");
   rep_a.href = "#" + slicesdiv_id + "-summary";
@@ -158,7 +246,6 @@ function fill_in_table(
   challenge_report.appendChild(rep_a);
   tablist.appendChild(challenge_report);
 
-  // Now, each slice
   aggregation_slices.forEach((aggregations_slice, slice_i) => {
     let tabheader = document.createElement("li");
     if (aggregations_slice.empty_challenge) {
@@ -172,8 +259,8 @@ function fill_in_table(
     span_from.appendChild(document.createTextNode(aggregations_slice.from));
     span_from.setAttribute("class", "tablimits");
     tab_a.appendChild(span_from);
+
     let tabtext;
-    let tabtextnode;
     if (aggregations_slice.from == aggregations_slice.to) {
       tabtext = aggregations_slice.from;
     } else {
@@ -187,7 +274,6 @@ function fill_in_table(
       tab_a.appendChild(span_to);
     }
     tab_a.setAttribute("title", tabtext);
-
     tabheader.appendChild(tab_a);
     tablist.appendChild(tabheader);
 
@@ -202,7 +288,11 @@ function fill_in_table(
     scrollableDiv.id = shift_slice_id;
     slicesdiv.appendChild(scrollableDiv);
   });
-  // This one disables the first tab, which is used to give a summary
+
+  // Initial state: show only the first 10 tabs
+  showVisibleTabs();
+  updateArrowButtons();
+  updatePaginator(); // Initialize paginator
   $(slicesdiv).tabs({ disabled: [0], active: 1 });
 }
 

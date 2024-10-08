@@ -1,6 +1,5 @@
 .oeb-table-scroll {
   position: relative;
-  /* width:100%; */
   z-index: 1;
   margin: auto;
   overflow: scroll;
@@ -31,12 +30,9 @@
   position: -webkit-sticky;
   position: sticky;
   background: #fff;
-  /* overflow: hidden; */
   z-index: 3;
 }
-/* .oeb-table-scroll th a{
- 
-}*/
+
 .oeb-table-scroll th:first-child {
   position: -webkit-sticky;
   position: sticky;
@@ -68,7 +64,8 @@
 }
 
 .classificator_list:hover {
-  background-color: #b3cde0;
+  --tw-bg-opacity: 1;
+  background-color: rgb(61 121 179 / var(--tw-bg-opacity));
 }
 
 .notbold {
@@ -77,22 +74,6 @@
 
 .italic {
   font-style: italic;
-}
-
-.aggregation_cell {
-  margin: auto;
-  max-width: 20ch;
-}
-
-.aggregation_cell,
-.tablimits {
-  max-width: 20ch;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tablimits {
-  display: inline-block;
 }
 
 .Q1 {
@@ -143,6 +124,114 @@
   background: rgb(255, 191, 191);
 }
 
-.ui-widget.ui-widget-content{
-  margin-top: 20px
+.ui-widget.ui-widget-content {
+  margin-top: 20px;
+}
+
+.tabs-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px; /* Adjust margin as needed */
+}
+
+/* Wrapper for tabs to control overflow */
+.tabs-wrapper {
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-height: 80px; /* Ensures the tabs wrapper keeps a minimum height */
+}
+
+.empty-tab {
+  visibility: hidden; /* Ensures that empty tabs do not interfere with the layout */
+  width: calc(20% - 10px); /* Match the size of a normal tab */
+  margin: 5px;
+  display: inline-block;
+}
+
+
+/* Tab list styling */
+.ui-tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  width: 96%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  transition: transform 0.3s ease; 
+  justify-content: center;
+}
+
+/* Tabs styling */
+.ui-tabs-tab {
+  flex: 0 0 calc(20% - 10px); /* Same width for tabs */
+  margin: 5px;
+  max-width: calc(20% - 10px);
+  text-align: center;
+  justify-content: center;
+}
+
+.ui-tabs-anchor {
+  display: inline-block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tablimits {
+  display: inline-block;
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Arrow button styling */
+.arrow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.5%;
+  background-color:#E9E9E9;
+  border: 1px solid #CCCCCC;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 1.5rem;
+}
+
+.left-arrow {
+  left: 0;
+}
+
+.right-arrow {
+  right: 0;
+}
+
+/* Ensure arrow buttons take up the full height of the tabs container */
+.arrow:focus {
+  outline: none;
+}
+
+.arrow:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ui-tabs-tab {
+    flex: 0 0 calc(50% - 10px); /* Adjust tab width for smaller screens */
+  }
+}
+
+.pags {
+  display: flex;
+    justify-content: center;
+    margin-top: -0.5rem;
 }
