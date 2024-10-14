@@ -176,6 +176,7 @@ function fill_in_table(
     if (totalTabs <= maxVisibleTabs) {
       buttonleft.style.display = "none";
       buttonright.style.display = "none";
+      tablist.style.width = "100%";
     } else {
       buttonleft.style.display = "block";
       buttonright.style.display = "block";
@@ -214,27 +215,11 @@ function fill_in_table(
 
   // Create the paginator
   let paginator = document.createElement("div");
-  paginator.setAttribute("class", "pags");
+  paginator.setAttribute("class", "tabs-footer");
   slicesdiv.appendChild(paginator);
 
-  function updatePaginator() {
-    const totalTabs = tablist.children.length;
-    const totalPages = Math.ceil(totalTabs / maxVisibleTabs);
-    const currentPage = Math.floor(currentIndex / maxVisibleTabs) + 1;
-
-    // Calculate the range of visible tabs
-    const startTab = currentIndex + 1; // Start index for visible tabs (1-based)
-    const endTab = Math.min(currentIndex + maxVisibleTabs, totalTabs); // End index for visible tabs (1-based)
-
-    paginator.innerHTML = `${startTab}-${endTab } tabs of ${totalTabs -1} Challenges, ${currentPage}/${totalPages} pages`; // Update paginator text
-  }
-
-
-  let challenge_report = document.createElement("li");
-  let rep_a = document.createElement("a");
-  rep_a.href = "#" + slicesdiv_id + "-summary";
-  let rep_b = document.createElement("b");
-  rep_b.appendChild(
+  let challenge_report = document.createElement("p");
+  challenge_report.appendChild(
     document.createTextNode(
       challenges_list.length.toString() +
         " Challenges, " +
@@ -242,9 +227,34 @@ function fill_in_table(
         " charts"
     )
   );
-  rep_a.appendChild(rep_b);
-  challenge_report.appendChild(rep_a);
-  tablist.appendChild(challenge_report);
+  challenge_report.setAttribute("class", "report");
+  paginator.appendChild(challenge_report);
+
+  function updatePaginator() {
+    const totalTabs = Array.from(tablist.children).filter(
+      (child) => !child.classList.contains("empty-tab")
+    ).length;
+    const totalPages = Math.ceil(totalTabs / maxVisibleTabs);
+    const currentPage = Math.floor(currentIndex / maxVisibleTabs) + 1;
+
+    // Calculate the range of visible tabs
+    const startTab = currentIndex + 1; // Start index for visible tabs (1-based)
+    const endTab = Math.min(currentIndex + maxVisibleTabs, totalTabs); // End index for visible tabs (1-based)
+
+    // Check if the paginator already contains a <p> element with class "pags"
+    let counter = paginator.querySelector('.pags');
+
+    if (!counter) {
+        // If no <p> element exists, create it
+        counter = document.createElement("p");
+        counter.setAttribute("class", "pags");
+        paginator.appendChild(counter);
+    }
+
+    // Update the content of the existing <p> element
+    counter.innerHTML = `${startTab}-${endTab} tabs of ${totalTabs} tabs, ${currentPage}/${totalPages} pages`;
+}
+
 
   aggregation_slices.forEach((aggregations_slice, slice_i) => {
     let tabheader = document.createElement("li");
@@ -293,7 +303,7 @@ function fill_in_table(
   showVisibleTabs();
   updateArrowButtons();
   updatePaginator(); // Initialize paginator
-  $(slicesdiv).tabs({ disabled: [0], active: 1 });
+  $(slicesdiv).tabs({ active: 0 });
 }
 
 function fill_in_table_slice(
@@ -346,6 +356,7 @@ function fill_in_table_slice(
       );
       a.setAttribute("href", technical_url);
       a.setAttribute("target", "_blank");
+      a.setAttribute("class", "aggregation_cell_2");
     }
     a.appendChild(document.createTextNode(toolname));
     a.setAttribute("title", toolname);
@@ -386,6 +397,7 @@ function fill_in_table_slice(
         let a = document.createElement("a");
         a.setAttribute("href", url);
         a.setAttribute("target", "blank");
+        a.setAttribute("class", "aggregation_cell_2");
         let acronym =
           "challenge_acronym" in aggregation
             ? aggregation.challenge_acronym
