@@ -2,6 +2,8 @@
 
 /*! exports provided: default */
 
+/*! exports provided: loaderImage */
+
 /*! exports provided: run_summary_table */
 
 /*! no static exports found */
@@ -13,6 +15,10 @@
 /*!*****************!*\
   !*** ./app.css ***!
   \*****************/
+
+/*!************************!*\
+  !*** ./loaderImage.js ***!
+  \************************/
 
 /*!********************************************!*\
   !*** ../node_modules/jquery-ui/ui/core.js ***!
