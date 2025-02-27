@@ -1,22 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<link rel="stylesheet" href="style.css" />
-		<title>Document</title>
-	</head>
-	<body>
-		<div class="oeb-table" data-benchmarkingevent="OEBE0020000000" data-api-url="{{ API_URL }}"></div>
-		<div class="oeb-table" data-benchmarkingevent="OEBE0020000001" data-api-url="https://openebench.bsc.es/api/scientific/graphql"></div>
-		<div class="oeb-table" data-benchmarkingevent="OEBE0020000002" data-api-url="https://dev-openebench.bsc.es/api/scientific/graphql"></div>
-	</body>
-	<script src="./build/build.js"></script>
-	<script>
-		run_summary_table();
-		setTimeout(() => {
-			run_summary_table(['OEBX0020000001', 'OEBX0020000002', 'OEBX0020000007', 'OEBX0020000004', 'OEBX0020000009'], 'OEBE0020000000');
-		}, 5000);
-	</script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="style.css" />
+    <title>OEB Event table results</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">
+        OpenEBench Scientific Benchmarking results classification table
+      </h1>
+      <hr />
+      <br />
+	  <h3>Example of data implementation structure:</h3>
+      <div
+        class="oeb-table"
+        data-benchmarkingevent="OEBE0020000000"
+        data-api-url="{{ API_URL }}"
+      ></div>
+      <hr />
+      <br />
+	  <h3>Data from OpenEBench production database:</h3>
+      <div
+        class="oeb-table"
+        data-benchmarkingevent="OEBE0100000003"
+        data-api-url="https://openebench.bsc.es/api/scientific/graphql"
+      ></div>
+      <hr />
+      <br />
+	  <h3>Data from OpenEBench development database:</h3>
+      <div
+        class="oeb-table"
+        data-benchmarkingevent="OEBE0020000001"
+        data-api-url="https://dev-openebench.bsc.es/api/scientific/graphql"
+      ></div>
+    </div>
+  </body>
+  <script src="./build/build.js"></script>
+  <script>
+    run_summary_table();
+    setTimeout(() => {
+      run_summary_table(
+        [
+          "OEBX0020000001",
+          "OEBX0020000002",
+          "OEBX0020000007",
+          "OEBX0020000004",
+          "OEBX0020000009",
+        ],
+        "OEBE0020000000"
+      );
+    }, 5000);
+  </script>
 </html>

@@ -1,53 +1,155 @@
+.oeb-table {
+  margin-bottom: 50px;
+}
+
+.title {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.ui-widget-content {
+  border: none !important;
+}
+
+.ui-tabs-nav li {
+  display: inline-block;
+  margin: 5px;
+  height: auto;
+}
+
+.ui-tabs-nav .empty-tab {
+  display: none !important; /* Fully hide empty tabs */
+}
+
+.ui-widget-header {
+  height: auto;
+}
+
+.ui-tabs .ui-tabs-nav li {
+  list-style: none;
+  float: left;
+  position: relative;
+  top: 0;
+  margin: 1px 0.2em 0 0;
+  border-bottom-width: 1px;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active .ui-tabs-anchor,
+.ui-tabs .ui-tabs-nav li.ui-state-disabled .ui-tabs-anchor,
+.ui-tabs .ui-tabs-nav li.ui-tabs-loading .ui-tabs-anchor {
+  cursor: default !important;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+a.ui-button:active,
+.ui-button:active,
+.ui-button.ui-state-active:hover {
+  background: #0c59a0 !important;
+  font-weight: normal;
+  color: white;
+  border: 1px solid #e9e9e9;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  outline: none !important;
+}
+
+*:focus {
+  outline: none !important;
+  outline-offset: 0 !important;
+}
+
+.ui-tabs-active:focus,
+.ui-tabs-anchor:focus {
+    outline: none !important;
+    outline-offset: 0 !important;
+}
+
 .oeb-table-scroll {
   position: relative;
-  /* width:100%; */
   z-index: 1;
+  table-layout: fixed;
   margin: auto;
-  overflow: scroll;
+  overflow-x: auto;
+  overflow-y: auto;
   max-height: 500px;
+  white-space: nowrap;
 }
+
 .oeb-table-scroll table {
-  width: 100%;
-  min-width: 600px;
+  width: auto;
+  min-width: 100%;
   margin: auto;
   border-collapse: separate;
   border-spacing: 0;
-}
-
-.oeb-table-scroll th,
-.oeb-table-scroll td {
-  padding: 5px 10px;
-  border: 1px solid black;  
-  vertical-align: top;
-  text-align: center;
-}
-.oeb-table-scroll thead th {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
+  border: 0.2px solid #0000003d;
+  border-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .oeb-table-scroll th {
-  position: -webkit-sticky;
-  position: sticky;
-  background: #fff;  
-  /* overflow: hidden; */
-  z-index:3;
-}
-/* .oeb-table-scroll th a{
- 
-}*/
-.oeb-table-scroll th:first-child {
-  position: -webkit-sticky;
-  position: sticky;
-  left: 0;
-  z-index: 2;
-}
-.oeb-table-scroll thead th:first-child{
-  z-index: 4;
-  
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 5px 10px;
+  border: 0.1px solid #0000003d;
+  text-align: center;
 }
 
+/* General styling for th and td */
+.oeb-table-scroll th,
+.oeb-table-scroll td {
+  padding: 5px 10px;
+  border: 0.1px solid #0000003d !important;
+  text-align: center;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 120px; /* Adjust based on content size */
+  max-width: 250px;
+}
+
+.oeb-table-scroll th:first-child,
+.oeb-table-scroll td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: #fff;
+  z-index: 4;
+}
+
+/* Sticky thead (for both header rows) */
+.oeb-table-scroll thead th {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 3;
+  border: 0.1px solid #0000003d;
+}
+
+/* Fix sticky behavior for the second row */
+.oeb-table-scroll thead tr:nth-child(2) th {
+  z-index: 3;
+  background-color: #fff;
+  top: 40px;
+}
+
+/* Fix overlapping issue of first column and first two rows */
+.oeb-table-scroll thead tr:first-child th,
+.oeb-table-scroll thead tr:nth-child(2) th {
+  position: sticky;
+  background-color: #fff;
+  z-index: 5;
+}
+
+/* Ensure first cell (top-left corner) remains fixed */
+.oeb-table-scroll thead tr:first-child th:first-child {
+  z-index: 6;
+  background-color: #fff;
+}
 
 .no_benchmark_data {
   text-align: center;
@@ -55,18 +157,30 @@
 }
 
 .classificator_list {
-  background-color: #0A58A2;
+  background-color: #0a58a2;
   color: #fff;
-  cursor: pointer; 
-  padding-left: 25px;
+  cursor: pointer;
+  padding-left: 5px;
   padding-right: 25px;
-  margin-left: 5px;
+  margin-left: 50px;
   text-align: center;
+  border: 5px solid transparent;
+  border-right: 15px solid transparent;
+  line-height: 1.25rem;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
 }
 
 .classificator_list:hover {
-  background-color: #b3cde0;
-} 
+  --tw-bg-opacity: 1;
+  background-color: rgb(61 121 179 / var(--tw-bg-opacity));
+}
+
+select.classificator_list {
+  appearance: auto;
+  -moz-appearance: auto !important;
+  -webkit-appearance: auto !important;
+}
 
 .notbold {
   font-weight: normal;
@@ -74,21 +188,6 @@
 
 .italic {
   font-style: italic;
-}
-
-.aggregation_cell {
-  margin: auto;
-  max-width: 20ch;
-}
-
-.aggregation_cell , .tablimits {
-  max-width: 20ch;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tablimits {
-  display: inline-block;
 }
 
 .Q1 {
@@ -108,37 +207,242 @@
   background-color: #edf8e9;
 }
 
-/*
-.Q2 , .Q3 , .Q4 {
-  color: #000000;
-}
-*/
-
 /* Disable strange header coloring */
 .aggregation_cell a {
   color: revert;
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: 20px;
+  height: 100px;
+  text-align: center;
+}
 
-.spinner-loading {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  border: 3px solid rgba(0,0,0,.3); 
-  border-radius: 50%;
-  border-top-color: #000;
-  animation: spin 1s ease-in-out infinite;
-  -webkit-animation: spin 1s ease-in-out infinite;
+/* Styling for the loading spinner image */
+.spinner {
+  width: 150px;
+  height: 100px;
 }
 
 .ui-tabs .ui-tabs-nav .empty-challenge {
-  background: rgb(255,191,191);
+  background: rgb(255, 191, 191);
 }
-  
 
-@keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+.ui-widget.ui-widget-content {
+  margin-top: 20px;
 }
-@-webkit-keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+
+.tabs-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+}
+
+.tabs-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: auto;
+  height: auto;
+}
+
+.empty-tab {
+  display: none;
+}
+
+/* Tab list styling */
+.ui-tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  width: 96%;
+  list-style: none;
+  padding: 0 0 0 20px;
+  margin: 0;
+  transition: transform 0.3s ease;
+  justify-content: center;
+  height: auto;
+  overflow: hidden;
+}
+
+.ui-tabs-nav:only-child {
+  height: auto; /* Ensure it collapses to fit the height */
+}
+/* Tabs styling */
+.ui-tabs-tab {
+  flex: 0 0 calc(20% - 10px); /* Same width for tabs */
+  margin: 5px;
+  max-width: calc(20% - 10px);
+  max-height: calc(70% - 10px);
+  box-sizing: padding-box;
+  border: 1px solid transparent;
+}
+
+.ui-tabs-anchor {
+  display: inline-block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tablimits {
+  display: inline-block;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-top: 5px;
+}
+
+/* Arrow button styling */
+.arrow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.5%;
+  background-color: #e9e9e9;
+  border: 1px solid #dddddd;
+  cursor: pointer;
+  font-size: 1.5rem;
+  border-radius: 3px;
+}
+
+.left-arrow {
+  left: 0;
+}
+
+.right-arrow {
+  right: 0;
+}
+
+/* Ensure arrow buttons take up the full height of the tabs container */
+.arrow:focus {
+  outline: none;
+}
+
+.arrow:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ui-tabs-tab {
+    flex: 0 0 calc(50% - 10px); /* Adjust tab width for smaller screens */
+  }
+}
+
+.report {
+  display: flex;
+  justify-content: left;
+  margin-top: 20px;
+  font-weight: bold;
+  margin-left: 0.5em;
+}
+
+.pags {
+  display: flex;
+  justify-content: center;
+  margin-top: -0.5rem;
+  margin-right: 0.8em;
+}
+
+.ui-tabs-panel {
+  display: block;
+  border-width: 0;
+  padding: 0px !important;
+  background: none;
+  margin: 0rem;
+}
+
+.tabs-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+.aggregation_cell_2 {
+  color: #0b579f !important;
+  text-decoration: none;
+}
+
+.aggregation_cell_2:hover {
+  color: #6a98c4 !important;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.aggregation_cell_2:visited {
+  color: #701a75 !important;
+}
+
+.aggregation_cell a {
+  cursor: default;
+  text-decoration: none;
+  color: black;
+  font-size: 1em;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: block;
+  padding: 1px;
+}
+
+.ui-tabs .ui-tabs-nav {
+  margin: 0;
+  padding: 0.2em;
+}
+
+b {
+  font-size: 0.85em;
+}
+
+/* CSS of boostrap container */
+.container {
+  width: 100%;
+  padding-right: var(--bs-gutter-x, 1.5rem);
+  padding-left: var(--bs-gutter-x, 1.5rem);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
 }
