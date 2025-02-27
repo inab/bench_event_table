@@ -9,7 +9,6 @@ import urljoin from "url-join";
 import { createApolloFetch } from "apollo-fetch";
 import { loaderImage } from "./loaderImage.js";
 
-
 let quartile_map = {
   1: {
     name: "Q1",
@@ -256,15 +255,15 @@ function fill_in_table(
 
   aggregation_slices.forEach((aggregations_slice, slice_i) => {
     if (
-        !aggregations_slice.members ||
-        aggregations_slice.members.length === 0
+      !aggregations_slice.members ||
+      aggregations_slice.members.length === 0
     ) {
-        // Skip empty tabs
-        return;
+      // Skip empty tabs
+      return;
     }
     let tabheader = document.createElement("li");
     if (aggregations_slice.empty_challenge) {
-        tabheader.setAttribute("class", "empty-challenge");
+      tabheader.setAttribute("class", "empty-challenge");
     }
     let tab_a = document.createElement("a");
     let shift_slice_id = slicesdiv_id + "-" + slice_i;
@@ -272,9 +271,9 @@ function fill_in_table(
 
     let tabtext;
     if (aggregations_slice.from == aggregations_slice.to) {
-        tabtext = aggregations_slice.from;
+      tabtext = aggregations_slice.from;
     } else {
-        tabtext = aggregations_slice.from + "\u00A0to " + aggregations_slice.to;
+      tabtext = aggregations_slice.from + "\u00A0to " + aggregations_slice.to;
     }
 
     let span_limits = document.createElement("span");
@@ -354,6 +353,9 @@ function fill_in_table_slice(
       a.setAttribute("href", technical_url);
       a.setAttribute("target", "_blank");
       a.setAttribute("class", "aggregation_cell_2");
+    }else{
+      a.setAttribute("style", "color:black");
+      a.setAttribute("style", "pointer:default");
     }
     a.appendChild(document.createTextNode(toolname));
     a.setAttribute("title", toolname);
@@ -476,9 +478,14 @@ function fill_in_table_slice(
   function updateTableLayout() {
     setTimeout(() => {
       let firstRowHeight = challenges_row.offsetHeight;
-      let secondRowHeaders = aggregations_row.querySelectorAll('th');
-      secondRowHeaders.forEach(function(header) {
-        header.style.top = firstRowHeight + 'px';
+      let secondRowHeaders = aggregations_row.querySelectorAll("th");
+      let firstHeaderInSecondRow =
+        aggregations_row.querySelector("th:first-child");
+
+      secondRowHeaders.forEach(function (header) {
+        header.style.top = firstRowHeight + "px";
+
+        firstHeaderInSecondRow.style.zIndex = "99";
       });
     }, 0);
   }
@@ -488,7 +495,7 @@ function fill_in_table_slice(
   // Watch for changes to the table and recalculate height
   let observer = new MutationObserver(function (mutationsList) {
     for (let mutation of mutationsList) {
-      if (mutation.type === 'childList' || mutation.type === 'attributes') {
+      if (mutation.type === "childList" || mutation.type === "attributes") {
         updateTableLayout();
       }
     }
@@ -497,12 +504,11 @@ function fill_in_table_slice(
   // Start observing the table for changes
   observer.observe(scrollableDiv, {
     attributes: true, // For any changes to attributes
-    childList: true,  // For any changes to child nodes
-    subtree: true     // Watch for changes in all descendants
+    childList: true, // For any changes to child nodes
+    subtree: true, // Watch for changes in all descendants
   });
   return scrollableDiv;
 }
-
 
 async function fetchUrl(url, http_method, challenge_list) {
   try {
@@ -803,7 +809,7 @@ function show_loading_spinner(divid, loading) {
     let spinner_img = document.createElement("img");
     spinner_img.loading = "lazy";
     spinner_img.src = loaderImage;
-    spinner_img.className = "spinner-loading";
+    spinner_img.className = "spinner";
 
     spinner_div.appendChild(spinner_img);
     document.getElementById(divid).appendChild(spinner_div);
